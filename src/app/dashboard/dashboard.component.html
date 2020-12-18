@@ -156,7 +156,7 @@
       <div class="card">
         <div class="card-body">
           <h4 class="card-title mb-4"> Informations générales</h4>
-            <div class="row">
+           <!-- <div class="row">
               <div class="col-md-4">
                 <span class="p-float-label">
                   <p-calendar [(ngModel)]="date_recolte" [style]="{'width': '100%'}"></p-calendar>
@@ -175,8 +175,21 @@
                   <label for="float-input">Observations</label>
                 </span>
               </div>
+            </div>-->
+            <div class="row">
+              <div class="col-md-12 mb-3" >
+                <label for="float-input">Date de récolte</label>
+                <p-calendar [(ngModel)]="date_recolte" [style]="{'width': '100%'}"></p-calendar>
+              </div>
+              <div class="col-md-12 mb-3">
+                <label for="float-input">Opérateur</label>
+                  <p-dropdown [options]="[]"  [style]="{'width': '100%'}" optionLabel="name"></p-dropdown>
+              </div>
+              <div class="col-md-12">
+                <label for="float-input">Observations</label>
+                <textarea rows="1" cols="30" [style]="{'width': '100%'}" pInputTextarea autoResize="autoResize"></textarea>
+              </div>
             </div>
-           
         </div>
       </div>
       
