@@ -17,6 +17,23 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { ContentAnimateDirective } from './shared/directives/content-animate.directive';
 import { TodoListComponent } from './apps/todo-list/todo-list.component';
 
+import {TableModule} from 'primeng/table';
+import {ToastModule} from 'primeng/toast';
+import {CalendarModule} from 'primeng/calendar';
+import {SliderModule} from 'primeng/slider';
+import {MultiSelectModule} from 'primeng/multiselect';
+import {ContextMenuModule} from 'primeng/contextmenu';
+import {DialogModule} from 'primeng/dialog';
+import {ButtonModule} from 'primeng/button';
+import {DropdownModule} from 'primeng/dropdown';
+import {ProgressBarModule} from 'primeng/progressbar';
+import {InputTextModule} from 'primeng/inputtext';
+import { CustomerService } from './dashboard/customerservice';
+import { HttpClientModule } from '@angular/common/http';
+import {TooltipModule} from 'primeng/tooltip';
+import {InputTextareaModule} from 'primeng/inputtextarea';
+import {InputNumberModule} from 'primeng/inputnumber';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,9 +53,25 @@ import { TodoListComponent } from './apps/todo-list/todo-list.component';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    ChartsModule
+    ChartsModule,
+    TableModule,
+    CalendarModule,
+		SliderModule,
+		DialogModule,
+		MultiSelectModule,
+		ContextMenuModule,
+		DropdownModule,
+		ButtonModule,
+		ToastModule,
+    InputTextModule,
+    ProgressBarModule,
+    FormsModule,
+    HttpClientModule,
+    TooltipModule,
+    InputTextareaModule,
+    InputNumberModule
   ],
-  providers: [ThemeService],
+  providers: [ThemeService,CustomerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

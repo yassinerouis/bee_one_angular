@@ -6,7 +6,7 @@ html {
 }
 
 body {
-  background: $content-bg;
+  background: #F7F7F7;
 }
 
 *:-moz-full-screen,
@@ -45,12 +45,6 @@ body {
   }
 }
 
-.content-wrapper {
-  background: $content-bg;
-  padding: 2.75rem 2.25rem;
-  width: 100%;
-  @include flex-grow(1);
-}
 
 .container-scroller {
   overflow: hidden;

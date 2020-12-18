@@ -3,7 +3,6 @@
 @import '../../../styles.scss';
 
 /* Navbar */
-
 .navbar {
   font-family: $type1-light;
   background: $navbar-bg;
@@ -42,9 +41,7 @@
       }
 
       img {
-        width: calc(#{$sidebar-width-lg} - 120px );
-        max-width: 100%;
-        height: 28px;
+        height: 50px;
         margin: auto;
         vertical-align: middle;
       }

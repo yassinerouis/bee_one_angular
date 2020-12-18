@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, NavigationStart, RouteConfigLoadStart, RouteConfigLoadEnd } from '@angular/router';
+import { PrimeNGConfig } from 'primeng/api';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,8 @@ export class AppComponent implements OnInit{
   showFooter: boolean = true;
   isLoading: boolean;
 
-  constructor(private router: Router) {
+ 
+  constructor(private router: Router,private primengConfig: PrimeNGConfig) {
     
     // Removing Sidebar, Navbar, Footer for Documentation, Error and Auth pages
     router.events.forEach((event) => { 
@@ -51,10 +53,8 @@ export class AppComponent implements OnInit{
       }
     });
   }
-
-
-
   ngOnInit() {
+    this.primengConfig.ripple = true;
     // Scroll to top after route change
     this.router.events.subscribe((evt) => {
       if (!(evt instanceof NavigationEnd)) {
