@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, NavigationStart, RouteConfigLoadStart, RouteConfigLoadEnd } from '@angular/router';
 import { PrimeNGConfig } from 'primeng/api';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +17,15 @@ export class AppComponent implements OnInit{
   isLoading: boolean;
 
  
-  constructor(private router: Router,private primengConfig: PrimeNGConfig) {
-    
+  constructor(private router: Router,private primengConfig: PrimeNGConfig, private translateService: TranslateService) {
+    this.primengConfig.setTranslation({
+      accept: 'Accept',
+      reject: 'Cancel',
+      //translations
+  });
+  this.translateService.setDefaultLang('fr');
+  this.translateService.use('fr');
+  this.translateService.get('primeng').subscribe(res => this.primengConfig.setTranslation(res));
     // Removing Sidebar, Navbar, Footer for Documentation, Error and Auth pages
     router.events.forEach((event) => { 
       if(event instanceof NavigationStart) {

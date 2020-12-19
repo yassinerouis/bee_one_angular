@@ -4,12 +4,10 @@
 .vsm-header{
   text-transform: uppercase;
   font-size: .8rem;
-  margin: .75rem 0;
   font-weight: bold;
-  color:#3f6ad8;
+  color:#3f6ad8 !important;
   white-space: nowrap;
   position: relative;
-  margin-left: 40px;
 }
 .sidebar {
   min-height: calc(100vh - #{$navbar-height});

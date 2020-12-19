@@ -1,3 +1,4 @@
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
@@ -29,10 +30,14 @@ import {DropdownModule} from 'primeng/dropdown';
 import {ProgressBarModule} from 'primeng/progressbar';
 import {InputTextModule} from 'primeng/inputtext';
 import { CustomerService } from './dashboard/customerservice';
-import { HttpClientModule } from '@angular/common/http';
+import {HttpClientModule, HttpClient} from '@angular/common/http';
 import {TooltipModule} from 'primeng/tooltip';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {InputNumberModule} from 'primeng/inputnumber';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 
 @NgModule({
   declarations: [
@@ -49,6 +54,13 @@ import {InputNumberModule} from 'primeng/inputnumber';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
     NgbModule,
     BrowserAnimationsModule,
     FormsModule,
@@ -71,7 +83,7 @@ import {InputNumberModule} from 'primeng/inputnumber';
     InputTextareaModule,
     InputNumberModule
   ],
-  providers: [ThemeService,CustomerService],
+  providers: [ThemeService,CustomerService,TranslateService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

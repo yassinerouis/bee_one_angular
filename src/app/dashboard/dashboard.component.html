@@ -5,24 +5,28 @@
     Déclaration de la récolte
   </h3>
   <div class="text-right">
-    <button pButton (click)="showForm()" pRipple type="button" icon="pi pi-plus" pTooltip="Ajouter" tooltipPosition="bottom" class="p-button-rounded p-button-info"></button>
-    <button pButton pRipple type="button" icon="pi pi-align-justify" pTooltip="Vue synthétique" tooltipPosition="bottom" class="p-button-rounded p-button-help"></button>
-    <button pButton pRipple type="button" icon="pi pi-file-excel" pTooltip="Télécharger Excel" tooltipPosition="bottom" class="p-button-rounded p-button-secondary"></button>
-    <button pButton pRipple type="button" icon="pi pi-file-pdf" pTooltip="Télécharger PDF" tooltipPosition="bottom" class="p-button-rounded p-button-success"></button>
-    <button pButton pRipple type="button" icon="pi pi-chart-bar" pTooltip="Vue graphique" tooltipPosition="bottom" class="p-button-rounded p-button-warning"></button>
-    <button pButton pRipple type="button" icon="pi pi-file-o" pTooltip="Copier" tooltipPosition="bottom" class="p-button-rounded p-button-primary"></button>
+   
+
+    <button pButton (click)="showForm()" pRipple type="button" icon="pi pi-plus" pTooltip="Ajouter" tooltipPosition="bottom" class="p-button-rounded p-button-info p-mr-2"></button>
+    <button pButton pRipple type="button" icon="pi pi-align-justify" pTooltip="Vue synthétique" tooltipPosition="bottom" class="p-button-rounded p-button-help p-mr-2"></button>
+    <button pButton pRipple type="button" icon="pi pi-chart-bar" pTooltip="Vue graphique" tooltipPosition="bottom" class="p-button-rounded p-button-warning p-mr-2"></button>
+    <button pButton pRipple type="button" (click)="exportExcel()" icon="pi pi-file-excel" pTooltip="Excel" tooltipPosition="bottom" class="p-button-rounded p-button-secondary p-mr-2"></button>
+    <button pButton pRipple type="button" (click)="exportPdf()" icon="pi pi-file-pdf" pTooltip="PDF" tooltipPosition="bottom" class="p-button-rounded p-button-success p-mr-2"></button>
+    <button pButton pRipple type="button" (click)="printPdf()" icon="pi pi-print" pTooltip="Imprimer" tooltipPosition="bottom" class="p-button-rounded p-button-warning p-mr-2"></button>
+
   </div>
 </div>
 <div class="row">
   <p-table #dt1 [value]="customers" dataKey="id" [rows]="10" [showCurrentPageReport]="true"
     [rowsPerPageOptions]="[10,25,50]" [loading]="loading" styleClass="p-datatable-customers p-datatable-gridlines"
-    [paginator]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [paginator]="true" currentPageReportTemplate="Afficher {first} à {last} de {totalRecords} entrées"
     [globalFilterFields]="['name','country.name','representative.name','status']">
+    
     <ng-template pTemplate="caption">
       <div class="p-d-flex">
         <span class="p-input-icon-left p-ml-auto">
                   <i class="pi pi-search"></i>
-                  <input pInputText type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Search keyword" />
+                  <input pInputText type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Rechercher par mot" />
               </span>
       </div>
     </ng-template>
@@ -151,6 +155,9 @@
 </div>
 </div>
 <div *ngIf="form">
+  <div class="text-right">
+    <button type="button" pButton pRipple icon="pi pi-times" (click)="form=!form" class="p-button-danger p-ml-auto" pTooltip="Fermer" tooltipPosition="bottom"></button>
+  </div>
   <div class="row">
     <div class="col-md-12 grid-margin stretch-card">
       <div class="card">
@@ -200,52 +207,49 @@
       <div class="card">
         <div class="card-body">
           <h4 class="card-title mb-4">Quantités récoltés</h4>
-          <p-table [value]="parcelles">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th>Parcelle</th>
-                    <th>Type de produit</th>
-                    <th>Récolte MO (kg)</th>
-                    <th>Récolte hors MO (kg)</th>
-                    <th>Vente sur pieds (kg)</th>
-                    <th>Quantité totale</th>
-                    <th>Solde</th>
-                    <th>Actions</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-parcelle>
-                <tr>
-                    <td>
-                      <span class="p-float-label">
-                        <p-dropdown [options]="[]" name="parcelle" [(ngModel)]="parcelle.ref"  [style]="{'width': '100%'}" optionLabel="name"></p-dropdown>
-                        <label for="float-input">Parcelle</label>
-                      </span>
-                    </td>
-                    <td>{{parcelle.typeProduit}}</td>
-                    <td>                  
-                        <p-inputNumber name="recoltemo" [style]="{'width': '50%'}" [(ngModel)]="parcelle.recolteMO" mode="decimal"></p-inputNumber>                     
-                    </td>
-                    <td>                   
-                        <p-inputNumber name="recoltehorsmo" [style]="{'width': '50%'}" [(ngModel)]="parcelle.recolteHorsMO" mode="decimal"></p-inputNumber>                     
-                    </td>
-                    <td>                     
-                        <p-inputNumber [(ngModel)]="parcelle.pied" mode="decimal"></p-inputNumber>                    
-                    </td>
-                    <td>             
-                    </td>
-                    <td>
-                        <p-inputNumber [(ngModel)]="parcelle.solde" mode="decimal"></p-inputNumber>
-                    </td>
-                    <td>
-                      <div class="ml-5">
-                        <button pButton pRipple type="button" icon="pi pi-minus" class="p-button-rounded p-button-warning" (click)="addItem()"></button>
-                        <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded p-button-info" (click)="addItem()"></button>  
-                      </div>
-                      
-                    </td>
-                </tr>
-              </ng-template>
-          </p-table>
+          <table class="table table-responsive">
+            <thead>
+              <tr class="thead-light">
+                <th style="width: 12.5%;">Parcelle</th>
+                <th style="width: 12.5%;">Type de produit</th>
+                <th style="width: 12.5%;">Récolte MO (kg)</th>
+                <th style="width: 12.5%;">Récolte hors MO</th>
+                <th style="width: 12.5%;">Vente sur pieds</th>
+                <th style="width: 12.5%;">Quantité totale</th>
+                <th style="width: 12.5%;">Solde</th>
+                <th style="width: 12.5%;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let parcelle of parcelles; first as first;last as last;">
+                <td>
+                    <p-dropdown [options]="[]" name="parcelle" [(ngModel)]="parcelle.ref"  [style]="{'width': '100%'}" optionLabel="name"></p-dropdown>
+                </td>
+                <td>{{parcelle.typeProduit}}</td>
+                <td>     
+                  <input name="recoltemo"  class="form-control"[(ngModel)]="parcelle.recolteMO"  style="width:100%" type="number">
+                </td>
+                <td>   
+                  <input name="recoltehorsmo" class="form-control"  [(ngModel)]="parcelle.recolteHorsMO"  style="width:100%" type="number">
+                </td>
+                <td>         
+                  <input name="pieds" class="form-control" [(ngModel)]="parcelle.pied" style="width:100%" type="number">
+                </td>
+                <td>             
+                </td>
+                <td>
+                  <input name="solde" class="form-control" [(ngModel)]="parcelle.solde" style="width:100%" type="number">
+                </td>
+                <td>
+                  <div>
+                    <button pButton pRipple type="button" icon="pi pi-minus" class="p-button-rounded p-button-warning" (click)="removeItem(parcelle)"></button>
+                    <button *ngIf="last" pButton pRipple type="button" icon="pi pi-plus"  (click)="addItem()" class="p-button-rounded p-button-info"></button>  
+                  </div>
+                  
+                </td>
+            </tr>
+            </tbody>
+          </table>
         </div> 
      
       </div>

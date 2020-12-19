@@ -3,6 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { Customer, Representative } from "./customer";
 import { CustomerService } from "./customerservice";
 import { MessageService } from "primeng/api";
+import jsPDF from 'jspdf'
+import 'jspdf-autotable'
+ 
+const doc = new jsPDF()
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -58,12 +62,32 @@ export class DashboardComponent implements OnInit {
   }
   
   exportPdf() {
-    import("jspdf").then(jsPDF => {
-            const doc = new jsPDF.default();
-            doc.save('products.pdf');
+    const doc:any = new jsPDF()
+    doc.autoTable({
+        body:this.customers,
+        columns: [
+          { header: 'Balance', dataKey: 'balance' },
+          { header: 'Company', dataKey: 'company' },
+        ],
     })
+    doc.save('table.pdf')
+  }
+  printPdf(){
+    var doc:any = new jsPDF();
+doc.autoTable({
+  body:this.customers,
+  columns: [
+    { header: 'Balance', dataKey: 'balance' },
+    { header: 'Company', dataKey: 'company' },
+  ],
+})
+doc.autoPrint();
+//This is a key for printing
+doc.output('dataurlnewwindow');
+    
   }
   parcelles=[{
+    id:1,
     ref:null,
     solde:null,
     typeProduit:null,
@@ -73,7 +97,9 @@ export class DashboardComponent implements OnInit {
     qteTotal:null
   }]
   addItem(){
+    console.log("hi")
     this.parcelles.push({
+      id:this.parcelles.length+1,
       ref:null,
       solde:null,
       typeProduit:null,
@@ -83,13 +109,30 @@ export class DashboardComponent implements OnInit {
       qteTotal:null
     })
   }
+  removeItem(parcelle){
+    console.log(this.parcelles.indexOf(parcelle))
+    if(this.parcelles.length==1){
+      this.parcelles[0]={
+        id:this.parcelles.length,
+        ref:null,
+        solde:null,
+        typeProduit:null,
+        recolteMO:null,
+        recolteHorsMO:null,
+        pied:null,
+        qteTotal:null
+      }
+    }else{
+      this.parcelles.splice(this.parcelles.indexOf(parcelle),1)
+    }
+  }
   date_recolte=new Date()
    exportExcel() {
       import("xlsx").then(xlsx => {
-          const worksheet = xlsx.utils.json_to_sheet(this.representatives);
+          const worksheet = xlsx.utils.json_to_sheet(this.customers);
           const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
           const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-          this.saveAsExcelFile(excelBuffer, "products");
+          this.saveAsExcelFile(excelBuffer, "customers");
       });
   }
 

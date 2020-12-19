@@ -1,6 +1,10 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
-    <li class="vsm-header">Estimations</li>
+    <li class="nav-item" [ngClass]="{ 'active': tables.isActive }">
+      <a class="nav-link">
+        <span class="menu-title vsm-header">Estimations</span>
+      </a>
+    </li>
     <li class="nav-item" [ngClass]="{ 'active': tables.isActive }">
       <a class="nav-link" routerLink="tables/basic-table" routerLinkActive #tables="routerLinkActive">
         <span class="menu-title">Estimation par parcelle</span>
@@ -42,7 +46,11 @@
         <i class="mdi mdi-chart-bar menu-icon"></i>
       </a>
     </li>
-    <li class="vsm-header">Récolte</li>
+    <li class="nav-item" [ngClass]="{ 'active': tables.isActive }">
+      <a class="nav-link">
+        <span class="menu-title vsm-header">Récolte</span>
+      </a>
+    </li>
     <li class="nav-item" [ngClass]="{ 'active': dashboard.isActive }">
       <a class="nav-link" routerLink="/dashboard" routerLinkActive #dashboard="routerLinkActive">
         <span class="menu-title">Déclaration de la récolte</span>
@@ -102,7 +110,11 @@
         </ul>
       </div>
     </li>
-    <li class="vsm-header">Suivi qualitatif </li>
+    <li class="nav-item" [ngClass]="{ 'active': tables.isActive }">
+      <a class="nav-link">
+        <span class="menu-title vsm-header">Suivi qualitatif</span>
+      </a>
+    </li>
     <li class="nav-item" [ngClass]="{ 'active': tables.isActive }">
       <a class="nav-link" routerLink="tables/basic-table" routerLinkActive #tables="routerLinkActive">
         <span class="menu-title">Analyse qualitative</span>
