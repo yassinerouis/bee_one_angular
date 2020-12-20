@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-
 import { Customer, Representative } from "./customer";
 import { CustomerService } from "./customerservice";
 import { MessageService } from "primeng/api";
@@ -8,12 +7,12 @@ import 'jspdf-autotable'
  
 const doc = new jsPDF()
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  selector: 'app-declaration-recolte',
+  templateUrl: './declaration-recolte.component.html',
+  styleUrls: ['./declaration-recolte.component.scss'],
   providers: [MessageService]
 })
-export class DashboardComponent implements OnInit {
+export class DeclarationRecolteComponent implements OnInit {
   customers: Customer[];
 
   representatives: Representative[];

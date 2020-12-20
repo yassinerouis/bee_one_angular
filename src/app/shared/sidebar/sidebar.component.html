@@ -6,7 +6,7 @@
       </a>
     </li>
     <li class="nav-item" [ngClass]="{ 'active': tables.isActive }">
-      <a class="nav-link" routerLink="tables/basic-table" routerLinkActive #tables="routerLinkActive">
+      <a class="nav-link" routerLink="/rendement/estimation-parcelle" routerLinkActive #tables="routerLinkActive">
         <span class="menu-title">Estimation par parcelle</span>
         <i class="mdi mdi-table-large menu-icon"></i>
       </a>
@@ -51,8 +51,8 @@
         <span class="menu-title vsm-header">Récolte</span>
       </a>
     </li>
-    <li class="nav-item" [ngClass]="{ 'active': dashboard.isActive }">
-      <a class="nav-link" routerLink="/dashboard" routerLinkActive #dashboard="routerLinkActive">
+    <li class="nav-item" [ngClass]="{ 'active': declarationRecolte.isActive }">
+      <a class="nav-link" routerLink="/rendement/declaration-recolte" routerLinkActive #declarationRecolte="routerLinkActive">
         <span class="menu-title">Déclaration de la récolte</span>
         <i class="mdi mdi-home menu-icon"></i>
       </a>
