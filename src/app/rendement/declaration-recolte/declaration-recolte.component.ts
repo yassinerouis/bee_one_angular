@@ -4,6 +4,9 @@ import { CustomerService } from "./customerservice";
 import { MessageService } from "primeng/api";
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
+import { ExportService } from 'src/app/services/export/export.service';
+import { formatDate } from '@angular/common';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
  
 const doc = new jsPDF()
 @Component({
@@ -22,9 +25,10 @@ export class DeclarationRecolteComponent implements OnInit {
   loading: boolean = true;
 
   activityValues: number[] = [0, 100];
-
-  constructor(private customerService: CustomerService) {}
-
+ 
+  constructor(private messageService: MessageService,private customerService: CustomerService,private exportService:ExportService) {
+  }
+  currentDate = new Date()
   ngOnInit() {
     this.customerService.getCustomersLarge().then(customers => {
       this.customers = customers;
@@ -59,32 +63,29 @@ export class DeclarationRecolteComponent implements OnInit {
     //this.exportExcel()
     //this.exportPdf()
   }
-  
   exportPdf() {
-    const doc:any = new jsPDF()
-    doc.autoTable({
-        body:this.customers,
-        columns: [
-          { header: 'Balance', dataKey: 'balance' },
-          { header: 'Company', dataKey: 'company' },
-        ],
-    })
-    doc.save('table.pdf')
+    let columns=[
+      { header: 'Balance', dataKey: 'balance' },
+      { header: 'Company', dataKey: 'company' },
+    ]
+    this.exportService.setTable(this.customers)
+    this.exportService.exportPdf(columns,'table.pdf')
   }
   printPdf(){
-    var doc:any = new jsPDF();
-doc.autoTable({
-  body:this.customers,
-  columns: [
-    { header: 'Balance', dataKey: 'balance' },
-    { header: 'Company', dataKey: 'company' },
-  ],
-})
-doc.autoPrint();
-//This is a key for printing
-doc.output('dataurlnewwindow');
-    
+    let columns=[
+      { header: 'Balance', dataKey: 'balance' },
+      { header: 'Company', dataKey: 'company' },
+    ]
+    this.exportService.setTable(this.customers)
+    this.exportService.printPdf(columns)
   }
+  exportExcel() {
+    this.exportService.exportExcel('table')
+  }
+  hero = {name:""}
+
+ 
+
   parcelles=[{
     id:1,
     ref:null,
@@ -95,18 +96,31 @@ doc.output('dataurlnewwindow');
     pied:null,
     qteTotal:null
   }]
+  msgs=[]
+  calculTotal(parcelle){
+    
+    let i = this.parcelles.indexOf(parcelle)
+    console.log(this.parcelles[i].recolteMO)
+    this.parcelles[i].qteTotal = this.parcelles[i].recolteMO + this.parcelles[i].recolteHorsMO + this.parcelles[i].pied
+    console.log(this.parcelles[i].qteTotal)
+  }
   addItem(){
-    console.log("hi")
-    this.parcelles.push({
-      id:this.parcelles.length+1,
-      ref:null,
-      solde:null,
-      typeProduit:null,
-      recolteMO:null,
-      recolteHorsMO:null,
-      pied:null,
-      qteTotal:null
-    })
+    if(this.parcelles[this.parcelles.length-1].recolteMO||this.parcelles[this.parcelles.length-1].solde||
+      this.parcelles[this.parcelles.length-1].recolteHorsMO||this.parcelles[this.parcelles.length-1].solde){
+      this.parcelles.push({
+        id:this.parcelles.length+1,
+        ref:null,
+        solde:null,
+        typeProduit:null,
+        recolteMO:null,
+        recolteHorsMO:null,
+        pied:null,
+        qteTotal:null
+      })
+    }
+    else{
+      this.messageService.add({severity:'error', summary:'Veuillez renseigner', detail:'tous les champs obligatoires'});
+    }  
   }
   removeItem(parcelle){
     console.log(this.parcelles.indexOf(parcelle))
@@ -125,16 +139,7 @@ doc.output('dataurlnewwindow');
       this.parcelles.splice(this.parcelles.indexOf(parcelle),1)
     }
   }
-  date_recolte=new Date()
-   exportExcel() {
-      import("xlsx").then(xlsx => {
-          const worksheet = xlsx.utils.json_to_sheet(this.customers);
-          const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-          const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-          this.saveAsExcelFile(excelBuffer, "customers");
-      });
-  }
-
+  date_recolte = new Date()
   value1=""
   value2=""
   value3=""
@@ -142,16 +147,7 @@ doc.output('dataurlnewwindow');
   showForm(){
     this.form=!this.form
   }
-  saveAsExcelFile(buffer: any, fileName: string): void {
-      import("file-saver").then(FileSaver => {
-          let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-          let EXCEL_EXTENSION = '.xlsx';
-          const data: Blob = new Blob([buffer], {
-              type: EXCEL_TYPE
-          });
-          FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
-      });
-  }
+ 
   toggleProBanner(event) {
     console.log("123");
     event.preventDefault();

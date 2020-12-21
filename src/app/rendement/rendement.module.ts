@@ -20,7 +20,9 @@ import {TooltipModule} from 'primeng/tooltip';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {InputNumberModule} from 'primeng/inputnumber';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import {MessagesModule} from 'primeng/messages';
+import {MessageModule} from 'primeng/message';
 const routes: Routes = [
   { path: 'declaration-recolte', component: DeclarationRecolteComponent }
 ]
@@ -46,9 +48,11 @@ const routes: Routes = [
     HttpClientModule,
     TooltipModule,
     InputTextareaModule,
-    InputNumberModule
+    InputNumberModule,
+    MessageModule,
+    MessagesModule
   ],
   providers: [CustomerService],
-
+  exports:[TranslateModule]
 })
 export class RendementModule { }

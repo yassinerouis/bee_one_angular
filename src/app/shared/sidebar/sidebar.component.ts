@@ -6,9 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
-  public uiBasicCollapsed = false;
-  public samplePagesCollapsed = false;
-  
+  public suiviQualitativeCollapsed = false;
+  public recolteCollapsed = false;
+  public estimationCollapsed = false;
   constructor() { }
 
   ngOnInit() {

@@ -3,7 +3,7 @@
 ul,
 ol,
 dl {
-  padding-left: 1rem;
+  padding-left: 0rem;
   font-size: $default-font-size;
   li {
     line-height: 1.8;
@@ -16,7 +16,7 @@ dl {
   list-style: none;
   padding: 0;
   li {
-    padding-left: 1.5rem;
+    padding-left: 0.75rem;
     &:before {
       font-family: "Material Design Icons";
       margin-left: -1.5rem;
@@ -61,9 +61,9 @@ dl {
   li {
     position: relative;
     list-style-type: none;
-    padding-left: 25px;
+    padding-left: 0px;
     line-height: 1;
-    padding-bottom: 25px;
+    padding-bottom: 10px;
     &:before,
     &:after {
       content:"";

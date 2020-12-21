@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
+import { LanguageService } from 'src/app/services/language/language.service';
 
 @Component({
   selector: 'app-navbar',
@@ -11,13 +12,15 @@ export class NavbarComponent implements OnInit {
   public iconOnlyToggled = false;
   public sidebarToggled = false;
   
-  constructor(config: NgbDropdownConfig) {
+  constructor(config: NgbDropdownConfig,private languageservice:LanguageService) {
     config.placement = 'bottom-right';
   }
 
   ngOnInit() {
   }
-
+  changeLanguage(lang){
+    this.languageservice.translate(lang)
+  }
   // toggle sidebar in small devices
   toggleOffcanvas() {
     document.querySelector('.sidebar-offcanvas').classList.toggle('active');

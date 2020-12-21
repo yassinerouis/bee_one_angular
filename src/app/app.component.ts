@@ -16,15 +16,14 @@ export class AppComponent implements OnInit{
   showFooter: boolean = true;
   isLoading: boolean;
 
- 
   constructor(private router: Router,private primengConfig: PrimeNGConfig, private translateService: TranslateService) {
     this.primengConfig.setTranslation({
       accept: 'Accept',
       reject: 'Cancel',
       //translations
   });
-  this.translateService.setDefaultLang('fr');
-  this.translateService.use('fr');
+  this.translateService.setDefaultLang(localStorage.getItem('lang'));
+  this.translateService.use(localStorage.getItem('lang'));
   this.translateService.get('primeng').subscribe(res => this.primengConfig.setTranslation(res));
     // Removing Sidebar, Navbar, Footer for Documentation, Error and Auth pages
     router.events.forEach((event) => { 

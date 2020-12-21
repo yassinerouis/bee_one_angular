@@ -1,0 +1,42 @@
+{
+    "primeng": {
+        "startsWith": "يبدأ ب",
+        "contains": "يحتوي على",
+        "notContains": "لا يحتوي على",
+        "endsWith": "ينتهي ب",
+        "equals": "يساوي",
+        "notEquals": "يختلف",
+        "lt": "أصغر من",
+        "lte": "أصغر من أو يساوي",
+        "gt": "أكبر من",
+        "gte": "أكبر من أو يساوي",
+        "is": "يساوي",
+        "isNot": "يختلف",
+        "before": "قبل",
+        "after": "بعد",
+        "clear": "افراغ",
+        "apply": "تم",
+        "matchAll": "مقارنة الكل",
+        "matchAny": "مقارنة",
+        "addRule": "اضافة دور",
+        "removeRule": "حذف دور",
+        "accept": "نعم",
+        "reject": "لا",
+        "choose": "اختيار",
+        "upload": "اضافة ملف",
+        "cancel": "الغاء",
+        "dayNames": ["الاحد", "", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"],
+        "dayNamesShort": ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
+        "dayNamesMin": ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
+        "monthNames": ["Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Decembre"],
+        "monthNamesShort": ["Jan", "Fev", "Mar", "Avr", "Mai", "Jun","Jui", "Aoû", "Sep", "Oct", "Nov", "Dec"],
+        "today": "Aujourd'hui",
+        "weekHeader": "Wk"
+    },
+    "rendement":{
+        "moduleName":"المحصول",
+        "estimations":"التقدير",
+        "recolte":"الجمع",
+        "suiviQualitatif":"المتابعة الكيفية"
+    }
+}

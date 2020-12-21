@@ -1,131 +1,57 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
-    <li class="nav-item" [ngClass]="{ 'active': tables.isActive }">
+    <li class="nav-item" [ngClass]="{ 'active': true }">
       <a class="nav-link">
-        <span class="menu-title vsm-header">Estimations</span>
+        <span class="menu-title vsm-header">    {{ 'rendement.moduleName' | translate }}
+        </span>
       </a>
     </li>
-    <li class="nav-item" [ngClass]="{ 'active': tables.isActive }">
-      <a class="nav-link" routerLink="/rendement/estimation-parcelle" routerLinkActive #tables="routerLinkActive">
-        <span class="menu-title">Estimation par parcelle</span>
-        <i class="mdi mdi-table-large menu-icon"></i>
-      </a>
-    </li>
-    <li class="nav-item" [ngClass]="{'active' : accordions.isActive || buttons.isActive || badges.isActive || breadcrumbs.isActive || dropdowns.isActive || modals.isActive || notifications.isActive || progressbar.isActive || pagination.isActive || tabs.isActive || typography.isActive || tooltips.isActive }">
-      <a class="nav-link" (click)="uiBasicCollapsed = !uiBasicCollapsed" [attr.aria-expanded]="uiBasicCollapsed" aria-controls="ui-basic">
-        <span class="menu-title">Suivi de grossissement</span>
+    <li class="nav-item" [ngClass]="{'active' : estimationparcelle.isActive || suivigrossissement.isActive || profilcalibre.isActive || evolutioncalibre.isActive  }">
+      <a class="nav-link" (click)="estimationCollapsed = !estimationCollapsed" [attr.aria-expanded]="estimationCollapsed" aria-controls="ui-basic">
+        <span class="menu-title">{{ 'rendement.estimations' | translate }}</span>
         <i class="menu-arrow"></i>
-        <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+        <i class="mdi mdi mdi-calculator menu-icon"></i>
       </a>
-      <div class="collapse" id="ui-basic" [ngbCollapse]="!uiBasicCollapsed">
+      <div class="collapse" id="ui-basic" [ngbCollapse]="!estimationCollapsed">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" routerLink="basic-ui/accordions" routerLinkActive="active" #accordions="routerLinkActive">Accordions</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="basic-ui/buttons" routerLinkActive="active" #buttons="routerLinkActive">Buttons</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="basic-ui/badges" routerLinkActive="active" #badges="routerLinkActive">Badges</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="basic-ui/breadcrumbs" routerLinkActive="active" #breadcrumbs="routerLinkActive">Breadcrumbs</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="basic-ui/dropdowns" routerLinkActive="active" #dropdowns="routerLinkActive">Dropdowns</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="basic-ui/modals" routerLinkActive="active" #modals="routerLinkActive">Modals</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="basic-ui/notifications" routerLinkActive="active" #notifications="routerLinkActive">Notifications</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="basic-ui/progressbar" routerLinkActive="active" #progressbar="routerLinkActive">Progress bar</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="basic-ui/pagination" routerLinkActive="active" #pagination="routerLinkActive">Pagination</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="basic-ui/tabs" routerLinkActive="active" #tabs="routerLinkActive">Tabs</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="basic-ui/typography" routerLinkActive="active" #typography="routerLinkActive">Typography</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="basic-ui/tooltips" routerLinkActive="active" #tooltips="routerLinkActive">Tooltips</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="rendement/estimationparcelle" routerLinkActive="active" #estimationparcelle="routerLinkActive">Estimation par parcelle</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="rendement/suivigrossissement" routerLinkActive="active" #suivigrossissement="routerLinkActive">Suivi de grossissement</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="rendement/profilcalibre" routerLinkActive="active" #profilcalibre="routerLinkActive">Profil de calibre</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="rendement/evolutioncalibre" routerLinkActive="active" #evolutioncalibre="routerLinkActive">Evolution de calibre</a></li>
         </ul>
       </div>
     </li>
-    <li class="nav-item" [ngClass]="{ 'active': forms.isActive }">
-      <a class="nav-link" routerLink="forms/basic-elements" routerLinkActive #forms="routerLinkActive">
-        <span class="menu-title">Profil de calibre</span>
-        <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-      </a>
-    </li>
-    <li class="nav-item" [ngClass]="{ 'active': charts.isActive }">
-      <a class="nav-link" routerLink="charts/chartjs" routerLinkActive #charts="routerLinkActive">
-        <span class="menu-title">Evolution de calibre</span>
-        <i class="mdi mdi-chart-bar menu-icon"></i>
-      </a>
-    </li>
-    <li class="nav-item" [ngClass]="{ 'active': tables.isActive }">
-      <a class="nav-link">
-        <span class="menu-title vsm-header">Récolte</span>
-      </a>
-    </li>
-    <li class="nav-item" [ngClass]="{ 'active': declarationRecolte.isActive }">
-      <a class="nav-link" routerLink="/rendement/declaration-recolte" routerLinkActive #declarationRecolte="routerLinkActive">
-        <span class="menu-title">Déclaration de la récolte</span>
-        <i class="mdi mdi-home menu-icon"></i>
-      </a>
-   
-    </li>
-    <li class="nav-item" [ngClass]="{ 'active': icons.isActive }">
-      <a class="nav-link" routerLink="icons/mdi" routerLinkActive #icons="routerLinkActive">
-        <span class="menu-title">Entrée stock produit</span>
-        <i class="mdi mdi-contacts menu-icon"></i>
-      </a>
-    </li>
-    <li class="nav-item" [ngClass]="{ 'active': tables.isActive }">
-      <a class="nav-link" routerLink="tables/basic-table" routerLinkActive #tables="routerLinkActive">
-        <span class="menu-title">Expédition</span>
-        <i class="mdi mdi-table-large menu-icon"></i>
-      </a>
-    </li>
-    <li class="nav-item" [ngClass]="{ 'active': icons.isActive }">
-      <a class="nav-link" routerLink="icons/mdi" routerLinkActive #icons="routerLinkActive">
-        <span class="menu-title">Bon de réception</span>
-        <i class="mdi mdi-contacts menu-icon"></i>
-      </a>
-    </li>
-    <li class="nav-item" [ngClass]="{ 'active': tables.isActive }">
-      <a class="nav-link" routerLink="tables/basic-table" routerLinkActive #tables="routerLinkActive">
-        <span class="menu-title">Bon de fabrication</span>
-        <i class="mdi mdi-table-large menu-icon"></i>
-      </a>
-    </li>
-    <li class="nav-item" [ngClass]="{ 'active': icons.isActive }">
-      <a class="nav-link" routerLink="icons/mdi" routerLinkActive #icons="routerLinkActive">
-        <span class="menu-title">Chiffre d'affaire</span>
-        <i class="mdi mdi-contacts menu-icon"></i>
-      </a>
-    </li>
-    <li class="nav-item" [ngClass]="{ 'active': icons.isActive }">
-      <a class="nav-link" routerLink="icons/mdi" routerLinkActive #icons="routerLinkActive">
-        <span class="menu-title">Chiffre d'affaire</span>
-        <i class="mdi mdi-contacts menu-icon"></i>
-      </a>
-    </li>
-    <li class="nav-item" [ngClass]="{ 'active' : blankPage.isActive || login.isActive || register.isActive || error404.isActive || error500.isActive }">
-      <a class="nav-link" (click)="samplePagesCollapsed = !samplePagesCollapsed"  [attr.aria-expanded]="samplePagesCollapsed" aria-controls="auth">
-        <span class="menu-title">Validation de la récolte</span>
+    <li class="nav-item" [ngClass]="{'active' : declarationrecolte.isActive || entrestockproduit.isActive || expedition.isActive || bonreception.isActive 
+    || bonfabrication.isActive || chiffreaffaires.isActive || validationrecolte.isActive }">
+      <a class="nav-link" (click)="recolteCollapsed = !recolteCollapsed" [attr.aria-expanded]="recolteCollapsed" aria-controls="ui-basic">
+        <span class="menu-title">{{ 'rendement.recolte' | translate }}</span>
         <i class="menu-arrow"></i>
-        <i class="mdi mdi-medical-bag menu-icon"></i>
+        <i class="mdi mdi mdi-food-apple menu-icon"></i>
       </a>
-      <div class="collapse" id="auth" [ngbCollapse]="!samplePagesCollapsed">
+      <div class="collapse" id="ui-basic" [ngbCollapse]="!recolteCollapsed">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" routerLink="general-pages/blank-page" routerLinkActive="active" #blankPage="routerLinkActive"> Blank Page </a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="user-pages/login" routerLinkActive="active" #login="routerLinkActive"> Login </a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="user-pages/register" routerLinkActive="active" #register="routerLinkActive"> Register </a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="error-pages/404" routerLinkActive="active" #error404="routerLinkActive"> 404 </a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="error-pages/500" routerLinkActive="active" #error500="routerLinkActive"> 500 </a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/declaration-recolte" routerLinkActive="active" #declarationrecolte="routerLinkActive">Déclaration de la récolte</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/entrestockproduit" routerLinkActive="active" #entrestockproduit="routerLinkActive">Entrée stock produit</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/expedition" routerLinkActive="active" #expedition="routerLinkActive">Expédition</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/bonreception" routerLinkActive="active" #bonreception="routerLinkActive">Bon de réception</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/bonfabrication" routerLinkActive="active" #bonfabrication="routerLinkActive">Bon de fabrication</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/chiffreaffaires" routerLinkActive="active" #chiffreaffaires="routerLinkActive">Chiffre d'affaires</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/validationrecolte" routerLinkActive="active" #validationrecolte="routerLinkActive">Validation de la récolte</a></li>
         </ul>
       </div>
     </li>
-    <li class="nav-item" [ngClass]="{ 'active': tables.isActive }">
-      <a class="nav-link">
-        <span class="menu-title vsm-header">Suivi qualitatif</span>
+    <li class="nav-item" [ngClass]="{ 'active' : analysequalitative.isActive || agreagefruits.isActive }">
+      <a class="nav-link" (click)="suiviQualitativeCollapsed = !suiviQualitativeCollapsed"  [attr.aria-expanded]="suiviQualitativeCollapsed" aria-controls="auth">
+        <span class="menu-title">{{ 'rendement.suiviQualitatif' | translate }}</span>
+        <i class="menu-arrow"></i>
+        <i class="mdi mdi mdi-monitor-multiple menu-icon"></i>
       </a>
-    </li>
-    <li class="nav-item" [ngClass]="{ 'active': tables.isActive }">
-      <a class="nav-link" routerLink="tables/basic-table" routerLinkActive #tables="routerLinkActive">
-        <span class="menu-title">Analyse qualitative</span>
-        <i class="mdi mdi-table-large menu-icon"></i>
-      </a>
-    </li>
-    <li class="nav-item" [ngClass]="{ 'active': icons.isActive }">
-      <a class="nav-link" routerLink="icons/mdi" routerLinkActive #icons="routerLinkActive">
-        <span class="menu-title">Agréage des fruits</span>
-        <i class="mdi mdi-contacts menu-icon"></i>
-      </a>
+      <div class="collapse" id="auth" [ngbCollapse]="!suiviQualitativeCollapsed">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" routerLink="rendement/analyse-qualitative" routerLinkActive="active" #analysequalitative="routerLinkActive">Analyse qualitative </a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="rendement/agreage-fruits" routerLinkActive="active" #agreagefruits="routerLinkActive"> Agréage des fruits </a></li>
+        </ul>
+      </div>
     </li>
   </ul>
 </nav>

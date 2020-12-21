@@ -64,3 +64,6 @@
 
 /* === Layout === */
 @import "./assets/scss/layout";
+.p-calendar .p-datepicker {
+    min-width: 10% !important; 
+}

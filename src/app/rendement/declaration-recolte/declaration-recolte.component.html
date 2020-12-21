@@ -1,3 +1,5 @@
+<p-messages [(value)]="msgs" [showTransitionOptions]="'5ms'" [hideTransitionOptions]="'0ms'"></p-messages>
+
 <div *ngIf="!form" >
   <div class="page-header">
     <h3 class="page-title">
@@ -7,9 +9,9 @@
     <div class="text-right">
      
   
-      <button pButton (click)="showForm()" pRipple type="button" icon="pi pi-plus" pTooltip="Ajouter" tooltipPosition="bottom" class="p-button-rounded p-button-info p-mr-2"></button>
+      <button pButton (click)="showForm()" pRipple type="button" icon="pi pi-plus" pTooltip="Ajouter" tooltipPosition="bottom" class="p-button-rounded p-button-info p-mr-2 mr-3"></button>
       <button pButton pRipple type="button" icon="pi pi-align-justify" pTooltip="Vue synthétique" tooltipPosition="bottom" class="p-button-rounded p-button-help p-mr-2"></button>
-      <button pButton pRipple type="button" icon="pi pi-chart-bar" pTooltip="Vue graphique" tooltipPosition="bottom" class="p-button-rounded p-button-warning p-mr-2"></button>
+      <button pButton pRipple type="button" icon="pi pi-chart-bar" pTooltip="Vue graphique" tooltipPosition="bottom" class="p-button-rounded p-button-warning p-mr-2 mr-3"></button>
       <button pButton pRipple type="button" (click)="exportExcel()" icon="pi pi-file-excel" pTooltip="Excel" tooltipPosition="bottom" class="p-button-rounded p-button-secondary p-mr-2"></button>
       <button pButton pRipple type="button" (click)="exportPdf()" icon="pi pi-file-pdf" pTooltip="PDF" tooltipPosition="bottom" class="p-button-rounded p-button-success p-mr-2"></button>
       <button pButton pRipple type="button" (click)="printPdf()" icon="pi pi-print" pTooltip="Imprimer" tooltipPosition="bottom" class="p-button-rounded p-button-warning p-mr-2"></button>
@@ -26,7 +28,7 @@
         <div class="p-d-flex">
           <span class="p-input-icon-left p-ml-auto">
                     <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Rechercher par mot" />
+                    <input pInputText type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Recherche par mot clé" />
                 </span>
         </div>
       </ng-template>
@@ -55,7 +57,7 @@
                   </div>
                 </ng-template>
                 <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                  <p-multiSelect [ngModel]="value" [options]="representatives" placeholder="Any"
+                  <p-multiSelect [ngModel]="value" [options]="representatives" placeholder="Tout"
                     (onChange)="filter($event.value)" optionLabel="name">
                     <ng-template let-option pTemplate="item">
                       <div class="p-multiselect-representative-option">
@@ -85,7 +87,7 @@
               <p-columnFilter field="status" matchMode="equals" display="menu">
                 <ng-template pTemplate="filter" let-value let-filter="filterCallback">
                   <p-dropdown [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)"
-                    placeholder="Any">
+                    placeholder="Tout">
                     <ng-template let-option pTemplate="item">
                       <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
                     </ng-template>
@@ -186,7 +188,7 @@
               <div class="row">
                 <div class="col-md-12 mb-3" >
                   <label for="float-input">Date de récolte</label>
-                  <p-calendar [(ngModel)]="date_recolte" [style]="{'width': '100%'}"></p-calendar>
+                  <p-calendar [(ngModel)]="date_recolte" class="date" [maxDate]="currentDate" [style]="{'width': '100%'}"></p-calendar>
                 </div>
                 <div class="col-md-12 mb-3">
                   <label for="float-input">Opérateur</label>
@@ -227,25 +229,26 @@
                   </td>
                   <td>{{parcelle.typeProduit}}</td>
                   <td>     
-                    <input name="recoltemo"  class="form-control"[(ngModel)]="parcelle.recolteMO"  style="width:100%" type="number">
+                    <p-inputNumber [min]="0" [(ngModel)]="parcelle.recolteMO" class="p-inputtext-sm" (onInput)="calculTotal(parcelle)"></p-inputNumber>
                   </td>
                   <td>   
-                    <input name="recoltehorsmo" class="form-control"  [(ngModel)]="parcelle.recolteHorsMO"  style="width:100%" type="number">
+                    <p-inputNumber [min]="0" [(ngModel)]="parcelle.recolteHorsMO" class="p-inputtext-sm" (onInput)="calculTotal(parcelle)"></p-inputNumber>
                   </td>
-                  <td>         
-                    <input name="pieds" class="form-control" [(ngModel)]="parcelle.pied" style="width:100%" type="number">
+                  <td>   
+                    <p-inputNumber [min]="0" [(ngModel)]="parcelle.pied" class="p-inputtext-sm" (onInput)="calculTotal(parcelle)"></p-inputNumber>
+ 
                   </td>
-                  <td>             
+                  <td>  
+                    <input type="number" class="p-inputtext-sm" pInputText [(ngModel)]="parcelle.qteTotal"/>
                   </td>
                   <td>
-                    <input name="solde" class="form-control" [(ngModel)]="parcelle.solde" style="width:100%" type="number">
+                    <p-inputNumber [(ngModel)]="parcelle.solde"  class="p-inputtext-sm"  [min]="0" ></p-inputNumber>
                   </td>
                   <td>
                     <div>
                       <button pButton pRipple type="button" icon="pi pi-minus" class="p-button-rounded p-button-warning" (click)="removeItem(parcelle)"></button>
                       <button *ngIf="last" pButton pRipple type="button" icon="pi pi-plus"  (click)="addItem()" class="p-button-rounded p-button-info"></button>  
                     </div>
-                    
                   </td>
               </tr>
               </tbody>
