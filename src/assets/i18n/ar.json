@@ -37,6 +37,19 @@
         "moduleName":"المحصول",
         "estimations":"التقدير",
         "recolte":"الجمع",
-        "suiviQualitatif":"المتابعة الكيفية"
+        "suiviQualitatif":"المتابعة الكيفية",
+        "estimationParcelle":" التقدير بالمؤامرة        ",
+        "suiviGrossissement":"تتبع التكبير        ",
+        "profilCalibre":"الملف الشخصي العيار",
+        "evolutionCalibre":"تطور العيار",
+        "declarationRecolte":"إعلان الحصاد",
+        "entreeStockProduit":"إدخال مخزون المنتج",
+        "expedition":"الشحن",
+        "bonReception":"أمر الاستقبال",
+        "bonFabrication":"أمر التصنيع",
+        "chiffreAffaires":"حجم الأعمال",
+        "validationRecolte":"التحقق من الحصاد",
+        "analyseQualitative":"التحليل النوعي ",
+        "agreageFruits":"الموافقة على الفاكهة"
     }
 }

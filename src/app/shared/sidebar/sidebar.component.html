@@ -14,10 +14,10 @@
       </a>
       <div class="collapse" id="ui-basic" [ngbCollapse]="!estimationCollapsed">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" routerLink="rendement/estimationparcelle" routerLinkActive="active" #estimationparcelle="routerLinkActive">Estimation par parcelle</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="rendement/suivigrossissement" routerLinkActive="active" #suivigrossissement="routerLinkActive">Suivi de grossissement</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="rendement/profilcalibre" routerLinkActive="active" #profilcalibre="routerLinkActive">Profil de calibre</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="rendement/evolutioncalibre" routerLinkActive="active" #evolutioncalibre="routerLinkActive">Evolution de calibre</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="rendement/estimationparcelle" routerLinkActive="active" #estimationparcelle="routerLinkActive">{{ 'rendement.estimationParcelle' | translate }}</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="rendement/suivigrossissement" routerLinkActive="active" #suivigrossissement="routerLinkActive">{{ 'rendement.suiviGrossissement' | translate }}</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="rendement/profilcalibre" routerLinkActive="active" #profilcalibre="routerLinkActive">{{ 'rendement.profilCalibre' | translate }}</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="rendement/evolutioncalibre" routerLinkActive="active" #evolutioncalibre="routerLinkActive">{{ 'rendement.evolutionCalibre' | translate }}</a></li>
         </ul>
       </div>
     </li>
@@ -30,13 +30,13 @@
       </a>
       <div class="collapse" id="ui-basic" [ngbCollapse]="!recolteCollapsed">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/declaration-recolte" routerLinkActive="active" #declarationrecolte="routerLinkActive">Déclaration de la récolte</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/entrestockproduit" routerLinkActive="active" #entrestockproduit="routerLinkActive">Entrée stock produit</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/expedition" routerLinkActive="active" #expedition="routerLinkActive">Expédition</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/bonreception" routerLinkActive="active" #bonreception="routerLinkActive">Bon de réception</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/bonfabrication" routerLinkActive="active" #bonfabrication="routerLinkActive">Bon de fabrication</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/chiffreaffaires" routerLinkActive="active" #chiffreaffaires="routerLinkActive">Chiffre d'affaires</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/validationrecolte" routerLinkActive="active" #validationrecolte="routerLinkActive">Validation de la récolte</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/declaration-recolte" routerLinkActive="active" #declarationrecolte="routerLinkActive">{{ 'rendement.declarationRecolte' | translate }}</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/entrestockproduit" routerLinkActive="active" #entrestockproduit="routerLinkActive">{{ 'rendement.entreeStockProduit' | translate }}</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/expedition" routerLinkActive="active" #expedition="routerLinkActive">{{ 'rendement.expedition' | translate }}</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/bonreception" routerLinkActive="active" #bonreception="routerLinkActive">{{ 'rendement.bonReception' | translate }}</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/bonfabrication" routerLinkActive="active" #bonfabrication="routerLinkActive">{{ 'rendement.bonFabrication' | translate }}</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/chiffreaffaires" routerLinkActive="active" #chiffreaffaires="routerLinkActive">{{ 'rendement.chiffreAffaires' | translate }}</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="/rendement/validationrecolte" routerLinkActive="active" #validationrecolte="routerLinkActive">{{ 'rendement.validationRecolte' | translate }}</a></li>
         </ul>
       </div>
     </li>
@@ -48,8 +48,8 @@
       </a>
       <div class="collapse" id="auth" [ngbCollapse]="!suiviQualitativeCollapsed">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" routerLink="rendement/analyse-qualitative" routerLinkActive="active" #analysequalitative="routerLinkActive">Analyse qualitative </a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="rendement/agreage-fruits" routerLinkActive="active" #agreagefruits="routerLinkActive"> Agréage des fruits </a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="rendement/analyse-qualitative" routerLinkActive="active" #analysequalitative="routerLinkActive">{{ 'rendement.analyseQualitative' | translate }} </a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="rendement/agreage-fruits" routerLinkActive="active" #agreagefruits="routerLinkActive"> {{ 'rendement.agreageFruits' | translate }} </a></li>
         </ul>
       </div>
     </li>

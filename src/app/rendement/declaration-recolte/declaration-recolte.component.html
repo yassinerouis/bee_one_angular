@@ -1,14 +1,10 @@
 <p-messages [(value)]="msgs" [showTransitionOptions]="'5ms'" [hideTransitionOptions]="'0ms'"></p-messages>
-
 <div *ngIf="!form" >
   <div class="page-header">
     <h3 class="page-title">
-    
       Déclaration de la récolte
     </h3>
     <div class="text-right">
-     
-  
       <button pButton (click)="showForm()" pRipple type="button" icon="pi pi-plus" pTooltip="Ajouter" tooltipPosition="bottom" class="p-button-rounded p-button-info p-mr-2 mr-3"></button>
       <button pButton pRipple type="button" icon="pi pi-align-justify" pTooltip="Vue synthétique" tooltipPosition="bottom" class="p-button-rounded p-button-help p-mr-2"></button>
       <button pButton pRipple type="button" icon="pi pi-chart-bar" pTooltip="Vue graphique" tooltipPosition="bottom" class="p-button-rounded p-button-warning p-mr-2 mr-3"></button>
@@ -19,11 +15,10 @@
     </div>
   </div>
   <div class="row">
-    <p-table #dt1 [value]="customers" dataKey="id" [rows]="10" [showCurrentPageReport]="true"
+    <p-table #dt1 [value]="declarations" dataKey="id" [rows]="10" [showCurrentPageReport]="true"
       [rowsPerPageOptions]="[10,25,50]" [loading]="loading" styleClass="p-datatable-customers p-datatable-gridlines"
       [paginator]="true" currentPageReportTemplate="Afficher {first} à {last} de {totalRecords} entrées"
-      [globalFilterFields]="['name','country.name','representative.name','status']">
-      
+      [globalFilterFields]="['declaration.DateRecolte']">
       <ng-template pTemplate="caption">
         <div class="p-d-flex">
           <span class="p-input-icon-left p-ml-auto">
@@ -36,121 +31,86 @@
         <tr>
           <th>
             <div class="p-d-flex p-jc-between p-ai-center">
-              Name
-              <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+              Date de récolte
+              <p-columnFilter type="date" field="DateRecolte" display="menu"></p-columnFilter>
             </div>
           </th>
           <th>
             <div class="p-d-flex p-jc-between p-ai-center">
-              Country
-              <p-columnFilter type="text" field="country.name" display="menu"></p-columnFilter>
+              Parcelle
+              <p-columnFilter type="text" field="Ref" display="menu"></p-columnFilter>
             </div>
           </th>
           <th>
             <div class="p-d-flex p-jc-between p-ai-center">
-              Agent
-              <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false"
-                [showOperator]="false" [showAddButton]="false">
-                <ng-template pTemplate="header">
-                  <div class="p-px-3 p-pt-3 p-pb-0">
-                    <span class="p-text-bold">Agent Picker</span>
-                  </div>
-                </ng-template>
-                <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                  <p-multiSelect [ngModel]="value" [options]="representatives" placeholder="Tout"
-                    (onChange)="filter($event.value)" optionLabel="name">
-                    <ng-template let-option pTemplate="item">
-                      <div class="p-multiselect-representative-option">
-                        <span class="p-ml-1">{{option.name}}</span>
-                      </div>
-                    </ng-template>
-                  </p-multiSelect>
-                </ng-template>
-              </p-columnFilter>
+              Type du produit
+              <p-columnFilter type="text" field="designation" display="menu"></p-columnFilter>
             </div>
           </th>
           <th>
             <div class="p-d-flex p-jc-between p-ai-center">
-              Date
-              <p-columnFilter type="date" field="date" display="menu"></p-columnFilter>
+              Récolte MO
+              <p-columnFilter type="numeric" field="RecolteMO" display="menu"></p-columnFilter>
             </div>
           </th>
           <th>
             <div class="p-d-flex p-jc-between p-ai-center">
-              Balance
-              <p-columnFilter type="numeric" field="balance" display="menu" currency="USD"></p-columnFilter>
+              Récolte hors MO
+              <p-columnFilter type="numeric" field="RecolteHorsMO" display="menu"></p-columnFilter>
             </div>
           </th>
           <th>
             <div class="p-d-flex p-jc-between p-ai-center">
-              Status
-              <p-columnFilter field="status" matchMode="equals" display="menu">
-                <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                  <p-dropdown [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)"
-                    placeholder="Tout">
-                    <ng-template let-option pTemplate="item">
-                      <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
-                    </ng-template>
-                  </p-dropdown>
-                </ng-template>
-              </p-columnFilter>
+              Vente sur pieds
+              <p-columnFilter type="numeric" field="VentePieds" display="menu"></p-columnFilter>
             </div>
           </th>
           <th>
             <div class="p-d-flex p-jc-between p-ai-center">
-              Activity
-              <p-columnFilter field="activity" matchMode="between" display="menu" [showMatchModes]="false"
-                [showOperator]="false" [showAddButton]="false">
-                <ng-template pTemplate="filter" let-filter="filterCallback">
-                  <p-slider [ngModel]="activityValues" [range]="true" (onSlideEnd)="filter($event.values)"
-                    styleClass="p-m-3"></p-slider>
-                  <div class="p-d-flex p-ai-center p-jc-between p-px-2">
-                    <span>{{activityValues[0]}}</span>
-                    <span>{{activityValues[1]}}</span>
-                  </div>
-                </ng-template>
-              </p-columnFilter>
+              Quantité totale
+              <p-columnFilter type="numeric" field="QteTotale" display="menu"></p-columnFilter>
             </div>
           </th>
+       
           <th style="width: 8rem">
             <div class="p-d-flex p-jc-between p-ai-center">
-              Verified
-              <p-columnFilter type="boolean" field="verified" display="menu"></p-columnFilter>
+              Actions
             </div>
           </th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-customer>
+      <ng-template pTemplate="body" let-declaration>
         <tr>
           <td>
-            {{customer.name}}
+            {{declaration.DateRecolte | date: 'MM/dd/yyyy'}}
           </td>
           <td>
-            <span class="image-text">{{customer.country.name}}</span>
+            <span class="image-text"> {{declaration.Ref}}</span>
           </td>
           <td>
-            <span class="image-text">{{customer.representative.name}}</span>
+            <span class="image-text">{{declaration.designation}}</span>
           </td>
-          <td>
-            {{customer.date | date: 'MM/dd/yyyy'}}
+          <td class="text-right">
+            {{declaration.RecolteMO}}
           </td>
-          <td>
-            {{customer.balance | currency:'USD':'symbol'}}
+          <td class="text-right">
+            {{declaration.RecolteHorsMO}}
           </td>
-          <td>
-            <span [class]="'customer-badge status-' + customer.status">{{customer.status}}</span>
+          <td class="text-right">
+            {{declaration.VentePieds}}
+          </td> 
+          <td class="text-right">
+            {{declaration.QteTotale}}
           </td>
-          <td>
-            <p-progressBar [value]="customer.activity" [showValue]="false"></p-progressBar>
-          </td>
-          <td class="p-text-center">
-            <i class="pi" [ngClass]="{'true-icon pi-check-circle': customer.verified, 'false-icon pi-times-circle': !customer.verified}"></i>
+          <td class="text-center">
+            <button pButton pRipple type="button" (click)="delete(declaration.IDENTIFIANT)" icon="pi pi-trash" pTooltip="Supprimer" tooltipPosition="bottom" class="p-button-rounded p-button-danger p-mr-2 mr-1"></button>
+            <button pButton pRipple type="button" (click)="edit(declaration.IDENTIFIANT)" icon="pi pi-pencil" pTooltip="Editer" tooltipPosition="bottom" class="p-button-rounded p-button-info p-mr-2"></button>      
           </td>
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="7">No customers found.</td>
+          <td colspan="8">Aucune déclaration de récolte n'est trouvée</td>
         </tr>
       </ng-template>
     </p-table>
@@ -165,38 +125,14 @@
         <div class="card">
           <div class="card-body">
             <h4 class="card-title mb-4"> Informations générales</h4>
-             <!-- <div class="row">
-                <div class="col-md-4">
-                  <span class="p-float-label">
-                    <p-calendar [(ngModel)]="date_recolte" [style]="{'width': '100%'}"></p-calendar>
-                    <label for="float-input">Date de récolte</label>
-                  </span>
-                </div>
-                <div class="col-md-4">
-                  <span class="p-float-label">
-                    <p-dropdown [options]="[]"  [style]="{'width': '100%'}" optionLabel="name"></p-dropdown>
-                    <label for="float-input">Opérateur</label>
-                  </span>
-                </div>
-                <div class="col-md-4">
-                  <span class="p-float-label">
-                    <textarea rows="1" cols="30" [style]="{'width': '100%'}" pInputTextarea autoResize="autoResize"></textarea>
-                    <label for="float-input">Observations</label>
-                  </span>
-                </div>
-              </div>-->
               <div class="row">
                 <div class="col-md-12 mb-3" >
                   <label for="float-input">Date de récolte</label>
-                  <p-calendar [(ngModel)]="date_recolte" class="date" [maxDate]="currentDate" [style]="{'width': '100%'}"></p-calendar>
-                </div>
-                <div class="col-md-12 mb-3">
-                  <label for="float-input">Opérateur</label>
-                    <p-dropdown [options]="[]"  [style]="{'width': '100%'}" optionLabel="name"></p-dropdown>
+                  <p-calendar [(ngModel)]="declaration.date_recolte" class="date" [maxDate]="currentDate" [style]="{'width': '100%'}"></p-calendar>
                 </div>
                 <div class="col-md-12">
                   <label for="float-input">Observations</label>
-                  <textarea rows="1" cols="30" [style]="{'width': '100%'}" pInputTextarea autoResize="autoResize"></textarea>
+                  <textarea rows="1" cols="30" [style]="{'width': '100%'}" pInputTextarea autoResize="autoResize" [(ngModel)]="declaration.observations"></textarea>
                 </div>
               </div>
           </div>
@@ -209,58 +145,60 @@
         <div class="card">
           <div class="card-body">
             <h4 class="card-title mb-4">Quantités récoltés</h4>
-            <table class="table table-responsive">
-              <thead>
-                <tr class="thead-light">
-                  <th style="width: 12.5%;">Parcelle</th>
-                  <th style="width: 12.5%;">Type de produit</th>
-                  <th style="width: 12.5%;">Récolte MO (kg)</th>
-                  <th style="width: 12.5%;">Récolte hors MO</th>
-                  <th style="width: 12.5%;">Vente sur pieds</th>
-                  <th style="width: 12.5%;">Quantité totale</th>
-                  <th style="width: 12.5%;">Solde</th>
-                  <th style="width: 12.5%;">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let parcelle of parcelles; first as first;last as last;">
-                  <td>
-                      <p-dropdown [options]="[]" name="parcelle" [(ngModel)]="parcelle.ref"  [style]="{'width': '100%'}" optionLabel="name"></p-dropdown>
-                  </td>
-                  <td>{{parcelle.typeProduit}}</td>
-                  <td>     
-                    <p-inputNumber [min]="0" [(ngModel)]="parcelle.recolteMO" class="p-inputtext-sm" (onInput)="calculTotal(parcelle)"></p-inputNumber>
-                  </td>
-                  <td>   
-                    <p-inputNumber [min]="0" [(ngModel)]="parcelle.recolteHorsMO" class="p-inputtext-sm" (onInput)="calculTotal(parcelle)"></p-inputNumber>
-                  </td>
-                  <td>   
-                    <p-inputNumber [min]="0" [(ngModel)]="parcelle.pied" class="p-inputtext-sm" (onInput)="calculTotal(parcelle)"></p-inputNumber>
- 
-                  </td>
-                  <td>  
-                    <input type="number" class="p-inputtext-sm" pInputText [(ngModel)]="parcelle.qteTotal"/>
-                  </td>
-                  <td>
-                    <p-inputNumber [(ngModel)]="parcelle.solde"  class="p-inputtext-sm"  [min]="0" ></p-inputNumber>
-                  </td>
-                  <td>
-                    <div>
-                      <button pButton pRipple type="button" icon="pi pi-minus" class="p-button-rounded p-button-warning" (click)="removeItem(parcelle)"></button>
-                      <button *ngIf="last" pButton pRipple type="button" icon="pi pi-plus"  (click)="addItem()" class="p-button-rounded p-button-info"></button>  
+
+            <div class="row" style="background-color:#F7F7F7; padding-top: 17px; border-radius:5px; margin-bottom: 10px;">
+              <div class="col-md-2">Parcelle</div>
+              <div class="col-md">Type de produit</div>
+              <div class="col-md">Récolte MO (kg)</div>
+              <div class="col-md">Récolte hors MO</div>
+              <div class="col-md">Vente sur pieds</div>
+              <div class="col-md">Quantité totale</div>
+              <div class="col-md">Solde</div>
+              <div class="col-md">Actions</div>
+            </div>
+            <div class="row" *ngFor="let parcelle of parcelles; first as first;last as last;">
+              <div class="col-md-2">
+
+                <p-dropdown [autoDisplayFirst]="false" [options]="listParcelles" (onChange)="onChange($event)" [style]="{'width':'100%','min-width':'100%'}" [(ngModel)]="parcelle.ID_Parcelle_Culturale" [showClear]="true" filter="true">
+                  <ng-template let-item pTemplate="selectedItem">
+                    <span >{{item.label}}</span>
+                  </ng-template>
+                  <ng-template let-parcelle pTemplate="item">
+                    <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                      <div>{{parcelle.label}}</div>     
                     </div>
-                  </td>
-              </tr>
-              </tbody>
-            </table>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+              <div class="col-md">{{parcelle.type}}</div>
+              <div class="col-md">
+                <p-inputNumber [min]="0"  mode="decimal" [(ngModel)]="parcelle.RecolteMO" class="p-inputtext-sm" (onBlur)="calculTotal(parcelle)"></p-inputNumber>
+              </div>
+              <div class="col-md">
+                <p-inputNumber [min]="0" mode="decimal" [(ngModel)]="parcelle.RecolteHorsMO" class="p-inputtext-sm" (onBlur)="calculTotal(parcelle)"></p-inputNumber>
+
+              </div>
+              <div class="col-md">
+                <p-inputNumber [min]="0" mode="decimal" [(ngModel)]="parcelle.VentePieds" class="p-inputtext-sm" (onBlur)="calculTotal(parcelle)"></p-inputNumber>
+              </div>
+              <div class="col-md">
+                <p-inputNumber [min]="0"  [(ngModel)]="parcelle.QteTotale" disabled class="p-inputtext-sm"></p-inputNumber>
+
+              </div>
+              <div class="col-md">                    
+                <p-inputNumber [(ngModel)]="parcelle.Solde" mode="decimal" class="p-inputtext-sm"  [min]="0" ></p-inputNumber>
+              </div>
+              <div class="col-md">
+                  <button pButton pRipple type="button" icon="pi pi-minus" class="p-button-rounded p-button-warning" (click)="removeItem(parcelle)"></button>
+                  <button *ngIf="last" pButton pRipple type="button" icon="pi pi-plus"  (click)="addItem()" class="p-button-rounded p-button-info"></button>  
+              </div>
+            </div>
           </div> 
-       
         </div>
-        
       </div>
     </div>
     <div class="text-right">
-      <button pButton pRipple type="button" label="Enregistrer" class="p-button-raised p-button-primary"></button>
+      <button pButton pRipple type="button" (click)="save()" label="Enregistrer" class="p-button-raised p-button-primary"></button>
       <button pButton pRipple type="button" label="Annuler" class="p-button-raised p-button-secondary"></button>
     </div>
   </div>

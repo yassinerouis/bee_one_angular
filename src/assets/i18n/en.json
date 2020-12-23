@@ -37,6 +37,19 @@
         "moduleName":"Yield",
         "estimations":"Estimates",
         "recolte":"Harvest",
-        "suiviQualitatif":"Qualitative monitoring"
+        "suiviQualitatif":"Qualitative monitoring",
+        "estimationParcelle":"Estimation par parcelle",
+        "suiviGrossissement":"Suivi de grossissement",
+        "profilCalibre":"Profil de calibre",
+        "evolutionCalibre":"Evolution de calibre",
+        "declarationRecolte":"Déclaration de la récolte",
+        "entreeStockProduit":"Entrée stock produit",
+        "expedition":"Expédition",
+        "bonReception":"Bon de réception",
+        "bonFabrication":"Bon de fabrication",
+        "chiffreAffaires":"Chiffre d'affaires",
+        "validationRecolte":"Validation de la récolte",
+        "analyseQualitative":"Analyse qualitative",
+        "agreageFruits":"Agréage des fruits"
     }
 }

@@ -37,6 +37,19 @@
         "moduleName":"Rendement",
         "estimations":"Estimations ",
         "recolte":"Récolte",
-        "suiviQualitatif":"Suivi qualitatif"
+        "suiviQualitatif":"Suivi qualitatif",
+        "estimationParcelle":"Estimation par parcelle",
+        "suiviGrossissement":"Suivi de grossissement",
+        "profilCalibre":"Profil de calibre",
+        "evolutionCalibre":"Evolution de calibre",
+        "declarationRecolte":"Déclaration de la récolte",
+        "entreeStockProduit":"Entrée stock produit",
+        "expedition":"Expédition",
+        "bonReception":"Bon de réception",
+        "bonFabrication":"Bon de fabrication",
+        "chiffreAffaires":"Chiffre d'affaires",
+        "validationRecolte":"Validation de la récolte",
+        "analyseQualitative":"Analyse qualitative",
+        "agreageFruits":"Agréage des fruits"
     }
 }

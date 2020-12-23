@@ -22,9 +22,16 @@ export class AppComponent implements OnInit{
       reject: 'Cancel',
       //translations
   });
-  this.translateService.setDefaultLang(localStorage.getItem('lang'));
-  this.translateService.use(localStorage.getItem('lang'));
-  this.translateService.get('primeng').subscribe(res => this.primengConfig.setTranslation(res));
+  if(localStorage.getItem('lang')){
+    this.translateService.setDefaultLang(localStorage.getItem('lang'));
+    this.translateService.use(localStorage.getItem('lang'));
+    this.translateService.get('primeng').subscribe(res => this.primengConfig.setTranslation(res));
+  }else{
+    this.translateService.setDefaultLang('fr');
+    this.translateService.use('fr');
+    this.translateService.get('primeng').subscribe(res => this.primengConfig.setTranslation(res));
+  }
+
     // Removing Sidebar, Navbar, Footer for Documentation, Error and Auth pages
     router.events.forEach((event) => { 
       if(event instanceof NavigationStart) {
@@ -61,6 +68,11 @@ export class AppComponent implements OnInit{
     });
   }
   ngOnInit() {
+    if(localStorage.getItem('lang')=='ar'){
+      document.getElementsByTagName('html')[0].setAttribute('dir', 'rtl');
+    }else{
+      document.getElementsByTagName('html')[0].setAttribute('dir', 'ltr');
+    }
     this.primengConfig.ripple = true;
     // Scroll to top after route change
     this.router.events.subscribe((evt) => {

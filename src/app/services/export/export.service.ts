@@ -23,8 +23,8 @@ export class ExportService {
     doc.save(name)
   }
   printPdf(columns){
-    var doc:any = new jsPDF();
-doc.autoTable({
+  var doc:any = new jsPDF();
+  doc.autoTable({
   body:this.table,
   columns: columns
 })

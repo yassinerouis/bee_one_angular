@@ -1,3 +1,5 @@
+import { DeclarationRecolteService } from './../../services/declaration-recolte/declaration-recolte.service';
+import { ParcelleCulturaleService } from './../../services/parcelle-culturale/parcelle-culturale.service';
 import { Component, OnInit } from '@angular/core';
 import { Customer, Representative } from "./customer";
 import { CustomerService } from "./customerservice";
@@ -5,9 +7,9 @@ import { MessageService } from "primeng/api";
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import { ExportService } from 'src/app/services/export/export.service';
-import { formatDate } from '@angular/common';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
- 
+
+ // Ce Component sert à la gestion de la declaration de la recolte
+
 const doc = new jsPDF()
 @Component({
   selector: 'app-declaration-recolte',
@@ -16,29 +18,69 @@ const doc = new jsPDF()
   providers: [MessageService]
 })
 export class DeclarationRecolteComponent implements OnInit {
+
+  //declaration des variables 
+
   customers: Customer[];
-
   representatives: Representative[];
-
   statuses: any[];
-
   loading: boolean = true;
-
   activityValues: number[] = [0, 100];
- 
-  constructor(private messageService: MessageService,private customerService: CustomerService,private exportService:ExportService) {
-  }
   currentDate = new Date()
+  listParcelles=[]
+  parcelles=[{
+    id:1,
+    ID_Parcelle_Culturale:null,
+    type:null,
+    Solde:null,
+    RecolteMO:null,
+    RecolteHorsMO:null,
+    VentePieds:null,
+    QteTotale:null
+  }]
+  msgs=[]
+  declaration={date_recolte : new Date(),observations:null}
+
+  form=false;
+  constructor(private messageService: MessageService,private customerService: CustomerService,private exportService:ExportService,
+    private declarationRecolteService:DeclarationRecolteService,private parcelleCulturaleService:ParcelleCulturaleService) {
+  }
+
+  save(){
+    let declarationRecolte = {
+      date_recolte:this.declaration.date_recolte,
+      observations:this.declaration.observations,
+      id_ferme:10002,
+      createdBy:"null null",
+      id_profil:1,
+      parcels:this.parcelles
+    }
+    console.log(declarationRecolte)
+    this.declarationRecolteService.addDeclarationRecolte(declarationRecolte).subscribe(res=>{
+      console.log(res)
+    })
+
+  }
+declarations:any
   ngOnInit() {
+    this.declarationRecolteService.getDeclarationRecolte().subscribe(res=>{
+      this.declarations=res
+    })
+    
+    //recuperer les parcelles culturales
+    this.parcelleCulturaleService.getParcelleCulturale().subscribe(res=>{
+      for(var i=0;i<res['length'];i++){
+        this.listParcelles[i]={label:res[i].Ref,value:res[i].ID}
+      }
+    })
     this.customerService.getCustomersLarge().then(customers => {
       this.customers = customers;
       this.loading = false;
-
       this.customers.forEach(
         customer => (customer.date = new Date(customer.date))
       );
     });
-
+    //recuperer les donnees de la table
     this.representatives = [
       { name: "Amy Elsner", image: "amyelsner.png" },
       { name: "Anna Fali", image: "annafali.png" },
@@ -63,241 +105,102 @@ export class DeclarationRecolteComponent implements OnInit {
     //this.exportExcel()
     //this.exportPdf()
   }
+  edit(id){
+    console.log(id)
+  }
+  delete(id){
+    console.log(id)
+  }
+  //lors du changement de la parcelle il recupère et affiche le type du produit
+  onChange(e){
+    this.parcelleCulturaleService.getTypeProduit(e.value).subscribe(res=>{
+      if(res[0]){
+        this.parcelles[this.parcelles.length-1].type=res[0].designation
+      }else{
+        this.parcelles[this.parcelles.length-1].type="Cette parcelle n\' a aucun type de produit"
+      }
+    })
+  }
+    // Debut exportations
   exportPdf() {
     let columns=[
-      { header: 'Balance', dataKey: 'balance' },
-      { header: 'Company', dataKey: 'company' },
+      { header: 'Date de récolte', dataKey: 'DateRecolte'},
+      { header: 'Parcelle', dataKey: 'Ref' },
+      { header: 'Type du produit', dataKey: 'designation' },
+      { header: 'Récolte MO', dataKey: 'RecolteMO' },
+      { header: 'Récolte hors MO', dataKey: 'RecolteHorsMO' },
+      { header: 'Vente sur pieds', dataKey: 'VentePieds' },
+      { header: 'Quantité totale', dataKey: 'QteTotale' }
     ]
-    this.exportService.setTable(this.customers)
-    this.exportService.exportPdf(columns,'table.pdf')
+    this.exportService.setTable(this.declarations)
+    this.exportService.exportPdf(columns,'declarationsRecolte.pdf')
   }
   printPdf(){
     let columns=[
-      { header: 'Balance', dataKey: 'balance' },
-      { header: 'Company', dataKey: 'company' },
+      { header: 'Date de récolte', dataKey: 'DateRecolte'},
+      { header: 'Parcelle', dataKey: 'Ref' },
+      { header: 'Type du produit', dataKey: 'designation' },
+      { header: 'Récolte MO', dataKey: 'RecolteMO' },
+      { header: 'Récolte hors MO', dataKey: 'RecolteHorsMO' },
+      { header: 'Vente sur pieds', dataKey: 'VentePieds' },
+      { header: 'Quantité totale', dataKey: 'QteTotale' }
     ]
-    this.exportService.setTable(this.customers)
+    this.exportService.setTable(this.declarations)
     this.exportService.printPdf(columns)
   }
   exportExcel() {
-    this.exportService.exportExcel('table')
+    this.exportService.exportExcel('declarationsRecolte')
   }
-  hero = {name:""}
+    // Fin exportations
 
- 
 
-  parcelles=[{
-    id:1,
-    ref:null,
-    solde:null,
-    typeProduit:null,
-    recolteMO:null,
-    recolteHorsMO:null,
-    pied:null,
-    qteTotal:null
-  }]
-  msgs=[]
   calculTotal(parcelle){
-    
     let i = this.parcelles.indexOf(parcelle)
-    console.log(this.parcelles[i].recolteMO)
-    this.parcelles[i].qteTotal = this.parcelles[i].recolteMO + this.parcelles[i].recolteHorsMO + this.parcelles[i].pied
-    console.log(this.parcelles[i].qteTotal)
+    console.log(this.parcelles[i].RecolteMO)
+    this.parcelles[i].QteTotale = this.parcelles[i].RecolteMO + this.parcelles[i].RecolteHorsMO + this.parcelles[i].VentePieds
   }
+//Ajouter un nouveau element à la table si l'element courant est valide
   addItem(){
-    if(this.parcelles[this.parcelles.length-1].recolteMO||this.parcelles[this.parcelles.length-1].solde||
-      this.parcelles[this.parcelles.length-1].recolteHorsMO||this.parcelles[this.parcelles.length-1].solde){
+    if(this.parcelles[this.parcelles.length-1].RecolteMO||this.parcelles[this.parcelles.length-1].Solde||
+      this.parcelles[this.parcelles.length-1].RecolteHorsMO||this.parcelles[this.parcelles.length-1].Solde){
       this.parcelles.push({
         id:this.parcelles.length+1,
-        ref:null,
-        solde:null,
-        typeProduit:null,
-        recolteMO:null,
-        recolteHorsMO:null,
-        pied:null,
-        qteTotal:null
+        type:null,
+        ID_Parcelle_Culturale:null,
+        Solde:null,
+        RecolteMO:null,
+        RecolteHorsMO:null,
+        VentePieds:null,
+        QteTotale:null
       })
     }
     else{
       this.messageService.add({severity:'error', summary:'Veuillez renseigner', detail:'tous les champs obligatoires'});
     }  
   }
+//supprimer un element de la table si il n'est pas le seul , si il est le seul on le vide
+
   removeItem(parcelle){
     console.log(this.parcelles.indexOf(parcelle))
     if(this.parcelles.length==1){
       this.parcelles[0]={
         id:this.parcelles.length,
-        ref:null,
-        solde:null,
-        typeProduit:null,
-        recolteMO:null,
-        recolteHorsMO:null,
-        pied:null,
-        qteTotal:null
+        type:null,
+        ID_Parcelle_Culturale:null,
+        Solde:null,
+        RecolteMO:null,
+        RecolteHorsMO:null,
+        VentePieds:null,
+        QteTotale:null
       }
     }else{
       this.parcelles.splice(this.parcelles.indexOf(parcelle),1)
     }
   }
-  date_recolte = new Date()
-  value1=""
-  value2=""
-  value3=""
-  form=false;
+
+//pour afficher et masquer le formulaire
   showForm(){
     this.form=!this.form
   }
- 
-  toggleProBanner(event) {
-    console.log("123");
-    event.preventDefault();
-    document.querySelector('body').classList.toggle('removeProbanner');
-  }
-  date: Date = new Date();
-
-  visitSaleChartData = [{
-    label: 'CHN',
-    data: [20, 40, 15, 35, 25, 50, 30, 20],
-    borderWidth: 1,
-    fill: false,
-  },
-  {
-    label: 'USA',
-    data: [40, 30, 20, 10, 50, 15, 35, 40],
-    borderWidth: 1,
-    fill: false,
-  },
-  {
-    label: 'UK',
-    data: [70, 10, 30, 40, 25, 50, 15, 30],
-    borderWidth: 1,
-    fill: false,
-  }];
-
-  visitSaleChartLabels = ["2013", "2014", "2014", "2015", "2016", "2017"];
-
-  visitSaleChartOptions = {
-    responsive: true,
-    legend: false,
-    scales: {
-        yAxes: [{
-            ticks: {
-                display: false,
-                min: 0,
-                stepSize: 20,
-                max: 80
-            },
-            gridLines: {
-              drawBorder: false,
-              color: 'rgba(235,237,242,1)',
-              zeroLineColor: 'rgba(235,237,242,1)'
-            }
-        }],
-        xAxes: [{
-            gridLines: {
-              display:false,
-              drawBorder: false,
-              color: 'rgba(0,0,0,1)',
-              zeroLineColor: 'rgba(235,237,242,1)'
-            },
-            ticks: {
-                padding: 20,
-                fontColor: "#9c9fa6",
-                autoSkip: true,
-            },
-            categoryPercentage: 0.4,
-            barPercentage: 0.4
-        }]
-      }
-  };
-
-  visitSaleChartColors = [
-    {
-      backgroundColor: [
-        'rgba(154, 85, 255, 1)',
-        'rgba(154, 85, 255, 1)',
-        'rgba(154, 85, 255, 1)',
-        'rgba(154, 85, 255, 1)',
-        'rgba(154, 85, 255, 1)',
-        'rgba(154, 85, 255, 1)',
-      ],
-      borderColor: [
-        'rgba(154, 85, 255, 1)',
-        'rgba(154, 85, 255, 1)',
-        'rgba(154, 85, 255, 1)',
-        'rgba(154, 85, 255, 1)',
-        'rgba(154, 85, 255, 1)',
-        'rgba(154, 85, 255, 1)',
-      ]
-    },
-    {
-      backgroundColor: [
-        'rgba(254, 112, 150, 1)',
-        'rgba(254, 112, 150, 1)',
-        'rgba(254, 112, 150, 1)',
-        'rgba(254, 112, 150, 1)',
-        'rgba(254, 112, 150, 1)',
-        'rgba(254, 112, 150, 1)',
-      ],
-      borderColor: [
-        'rgba(254, 112, 150, 1)',
-        'rgba(254, 112, 150, 1)',
-        'rgba(254, 112, 150, 1)',
-        'rgba(254, 112, 150, 1)',
-        'rgba(254, 112, 150, 1)',
-        'rgba(254, 112, 150, 1)',
-      ]
-    },
-    {
-      backgroundColor: [
-        'rgba(177, 148, 250, 1)',
-        'rgba(177, 148, 250, 1)',
-        'rgba(177, 148, 250, 1)',
-        'rgba(177, 148, 250, 1)',
-        'rgba(177, 148, 250, 1)',
-        'rgba(177, 148, 250, 1)',
-      ],
-      borderColor: [
-        'rgba(177, 148, 250, 1)',
-        'rgba(177, 148, 250, 1)',
-        'rgba(177, 148, 250, 1)',
-        'rgba(177, 148, 250, 1)',
-        'rgba(177, 148, 250, 1)',
-        'rgba(177, 148, 250, 1)',
-      ]
-    },
-  ];
-
-  trafficChartData = [
-    {
-      data: [30, 30, 40],
-    }
-  ];
-
-  trafficChartLabels = ["Search Engines", "Direct Click", "Bookmarks Click"];
-
-  trafficChartOptions = {
-    responsive: true,
-    animation: {
-      animateScale: true,
-      animateRotate: true
-    },
-    legend: false,
-  };
-
-  trafficChartColors = [
-    {
-      backgroundColor: [
-        'rgba(177, 148, 250, 1)',
-        'rgba(254, 112, 150, 1)',
-        'rgba(132, 217, 210, 1)'
-      ],
-      borderColor: [
-        'rgba(177, 148, 250, .2)',
-        'rgba(254, 112, 150, .2)',
-        'rgba(132, 217, 210, .2)'
-      ]
-    }
-  ];
 
 }

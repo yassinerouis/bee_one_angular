@@ -20,6 +20,12 @@ export class NavbarComponent implements OnInit {
   }
   changeLanguage(lang){
     this.languageservice.translate(lang)
+    console.log(localStorage.getItem('lang'))
+    if(localStorage.getItem('lang')=='ar'){
+      document.getElementsByTagName('html')[0].setAttribute('dir', 'rtl');
+    }else{
+      document.getElementsByTagName('html')[0].setAttribute('dir', 'ltr');
+    }
   }
   // toggle sidebar in small devices
   toggleOffcanvas() {

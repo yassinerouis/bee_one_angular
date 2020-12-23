@@ -47,7 +47,7 @@ body {
 
 .content-wrapper {
   background: #F7F7F7;
-  padding: 2.75rem 2.25rem;
+  padding: 0.75rem 2rem;
   width: 100%;
   @include flex-grow(1);
 }
@@ -74,7 +74,7 @@ code {
   @extend .d-flex;
   @extend .justify-content-between;
   @extend .align-items-center;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 0.5rem 0;
   .breadcrumb {
     border: 0;
     margin-bottom: 0;
