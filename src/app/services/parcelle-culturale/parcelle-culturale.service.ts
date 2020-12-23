@@ -4,11 +4,11 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
+
 export class ParcelleCulturaleService {
   url="http://agridata.hopto.org:9010/agridata-lga-backend/api";
-
   constructor(private http:HttpClient) {
-   }
+  }
    getParcelleCulturale(){
      return this.http.get(this.url+'/get_parcelle_cultural')
    }

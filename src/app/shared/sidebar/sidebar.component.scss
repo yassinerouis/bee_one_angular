@@ -9,6 +9,9 @@
   white-space: nowrap;
   position: relative;
 }
+.nav{
+  padding-right: 0 !important;
+}
 .sidebar {
   min-height: calc(100vh - #{$navbar-height});
   background: $sidebar-bg;

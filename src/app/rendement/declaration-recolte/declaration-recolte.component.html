@@ -1,12 +1,11 @@
-<p-messages [(value)]="msgs" [showTransitionOptions]="'5ms'" [hideTransitionOptions]="'0ms'"></p-messages>
-<div *ngIf="!form" >
+<div *ngIf="!form && !synthetique" >
   <div class="page-header">
     <h3 class="page-title">
       Déclaration de la récolte
     </h3>
     <div class="text-right">
       <button pButton (click)="showForm()" pRipple type="button" icon="pi pi-plus" pTooltip="Ajouter" tooltipPosition="bottom" class="p-button-rounded p-button-info p-mr-2 mr-3"></button>
-      <button pButton pRipple type="button" icon="pi pi-align-justify" pTooltip="Vue synthétique" tooltipPosition="bottom" class="p-button-rounded p-button-help p-mr-2"></button>
+      <button pButton pRipple type="button" (click)="showHideSynthetique()" icon="pi pi-align-justify" pTooltip="Vue synthétique" tooltipPosition="bottom" class="p-button-rounded p-button-help p-mr-2"></button>
       <button pButton pRipple type="button" icon="pi pi-chart-bar" pTooltip="Vue graphique" tooltipPosition="bottom" class="p-button-rounded p-button-warning p-mr-2 mr-3"></button>
       <button pButton pRipple type="button" (click)="exportExcel()" icon="pi pi-file-excel" pTooltip="Excel" tooltipPosition="bottom" class="p-button-rounded p-button-secondary p-mr-2"></button>
       <button pButton pRipple type="button" (click)="exportPdf()" icon="pi pi-file-pdf" pTooltip="PDF" tooltipPosition="bottom" class="p-button-rounded p-button-success p-mr-2"></button>
@@ -15,16 +14,16 @@
     </div>
   </div>
   <div class="row">
-    <p-table #dt1 [value]="declarations" dataKey="id" [rows]="10" [showCurrentPageReport]="true"
+    <p-table #dt [value]="declarations" dataKey="id" [rows]="10" [showCurrentPageReport]="true"
       [rowsPerPageOptions]="[10,25,50]" [loading]="loading" styleClass="p-datatable-customers p-datatable-gridlines"
       [paginator]="true" currentPageReportTemplate="Afficher {first} à {last} de {totalRecords} entrées"
-      [globalFilterFields]="['declaration.DateRecolte']">
+      [globalFilterFields]="['Observations','parcelles','RecolteMO','RecolteHorsMO','VentePieds','QteTotale']">
       <ng-template pTemplate="caption">
         <div class="p-d-flex">
           <span class="p-input-icon-left p-ml-auto">
-                    <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Recherche par mot clé" />
-                </span>
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Recherche globale" />
+          </span>
         </div>
       </ng-template>
       <ng-template pTemplate="header">
@@ -37,14 +36,14 @@
           </th>
           <th>
             <div class="p-d-flex p-jc-between p-ai-center">
-              Parcelle
-              <p-columnFilter type="text" field="Ref" display="menu"></p-columnFilter>
+              Parcelles
+              <p-columnFilter type="number" field="parcelles" display="menu"></p-columnFilter>
             </div>
           </th>
           <th>
             <div class="p-d-flex p-jc-between p-ai-center">
-              Type du produit
-              <p-columnFilter type="text" field="designation" display="menu"></p-columnFilter>
+              Observations
+              <p-columnFilter type="text" field="Observations" display="menu"></p-columnFilter>
             </div>
           </th>
           <th>
@@ -81,14 +80,14 @@
       </ng-template>
       <ng-template pTemplate="body" let-declaration>
         <tr>
-          <td>
+          <td class="text-center">
             {{declaration.DateRecolte | date: 'MM/dd/yyyy'}}
           </td>
-          <td>
-            <span class="image-text"> {{declaration.Ref}}</span>
+          <td class="text-right">
+            {{declaration.parcelles}}
           </td>
           <td>
-            <span class="image-text">{{declaration.designation}}</span>
+            <span class="image-text">{{declaration.Observations}}</span>
           </td>
           <td class="text-right">
             {{declaration.RecolteMO}}
@@ -103,8 +102,8 @@
             {{declaration.QteTotale}}
           </td>
           <td class="text-center">
-            <button pButton pRipple type="button" (click)="delete(declaration.IDENTIFIANT)" icon="pi pi-trash" pTooltip="Supprimer" tooltipPosition="bottom" class="p-button-rounded p-button-danger p-mr-2 mr-1"></button>
-            <button pButton pRipple type="button" (click)="edit(declaration.IDENTIFIANT)" icon="pi pi-pencil" pTooltip="Editer" tooltipPosition="bottom" class="p-button-rounded p-button-info p-mr-2"></button>      
+            <button pButton pRipple type="button" (click)="delete(declaration.ID[0])" icon="pi pi-trash" pTooltip="Supprimer" tooltipPosition="bottom" class="p-button-rounded p-button-danger p-mr-2 mr-1 ml-1"></button>
+            <button pButton pRipple type="button" (click)="edit(declaration.ID[0])" icon="pi pi-pencil" pTooltip="Editer" tooltipPosition="bottom" class="p-button-rounded p-button-info p-mr-2"></button>      
           </td>
         </tr>
       </ng-template>
@@ -116,7 +115,112 @@
     </p-table>
   </div>
   </div>
-  <div *ngIf="form">
+  <div *ngIf="synthetique" >
+    <div class="page-header">
+  <h3 class="page-title">
+    Déclaration de la récolte
+  </h3>
+  <div class="text-right">
+    <button pButton pRipple type="button" (click)="showHideSynthetique()" icon="pi pi-bars" pTooltip="Vue normale" tooltipPosition="bottom" class="p-button-rounded p-button-info p-mr-2 mr-3"></button>
+    <button pButton pRipple type="button" (click)="exportDetailsExcel()" icon="pi pi-file-excel" pTooltip="Excel" tooltipPosition="bottom" class="p-button-rounded p-button-secondary p-mr-2"></button>
+    <button pButton pRipple type="button" (click)="exportDetailsPdf()" icon="pi pi-file-pdf" pTooltip="PDF" tooltipPosition="bottom" class="p-button-rounded p-button-success p-mr-2"></button>
+    <button pButton pRipple type="button" (click)="printDetailsPdf()" icon="pi pi-print" pTooltip="Imprimer" tooltipPosition="bottom" class="p-button-rounded p-button-warning p-mr-2"></button>
+
+  </div>
+</div>
+  <div class="row">
+  <p-table #dt1 [value]="detailsDeclarations" dataKey="id" [rows]="10" [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10,25,50]" [loading]="loading" styleClass="p-datatable-customers p-datatable-gridlines"
+    [paginator]="true" currentPageReportTemplate="Afficher {first} à {last} de {totalRecords} entrées"
+    [globalFilterFields]="['Ref','designation','RecolteMO','RecolteHorsMO','VentePieds','QteTotale']">
+    <ng-template pTemplate="caption">
+      <div class="p-d-flex">
+        <span class="p-input-icon-left p-ml-auto">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Recherche globale" />
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Date de récolte
+            <p-columnFilter type="date" field="DateRecolte" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Parcelle
+            <p-columnFilter type="text" field="Ref" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Type du produit
+            <p-columnFilter type="text" field="designation" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Récolte MO
+            <p-columnFilter type="numeric" field="RecolteMO" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Récolte hors MO
+            <p-columnFilter type="numeric" field="RecolteHorsMO" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Vente sur pieds
+            <p-columnFilter type="numeric" field="VentePieds" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Quantité totale
+            <p-columnFilter type="numeric" field="QteTotale" display="menu"></p-columnFilter>
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-declaration>
+      <tr>
+        <td class="text-center">
+          {{declaration.DateRecolte | date: 'MM/dd/yyyy'}}
+        </td>
+        <td>
+          <span class="image-text"> {{declaration.Ref}}</span>
+        </td>
+        <td>
+          <span class="image-text">{{declaration.designation}}</span>
+        </td>
+        <td class="text-right">
+          {{declaration.RecolteMO}}
+        </td>
+        <td class="text-right">
+          {{declaration.RecolteHorsMO}}
+        </td>
+        <td class="text-right">
+          {{declaration.VentePieds}}
+        </td> 
+        <td class="text-right">
+          {{declaration.QteTotale}}
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8">Aucune déclaration de récolte n'est trouvée</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+</div>
+  <div *ngIf="form && !synthetique">
     <div class="text-right">
       <button type="button" pButton pRipple icon="pi pi-times" (click)="form=!form" class="p-button-danger p-ml-auto" pTooltip="Fermer" tooltipPosition="bottom"></button>
     </div>
@@ -170,23 +274,23 @@
                   </ng-template>
                 </p-dropdown>
               </div>
-              <div class="col-md">{{parcelle.type}}</div>
+              <div class="col-md" style="padding-top:10px;">{{parcelle.type}}</div>
               <div class="col-md">
-                <p-inputNumber [min]="0"  mode="decimal" [(ngModel)]="parcelle.RecolteMO" class="p-inputtext-sm" (onBlur)="calculTotal(parcelle)"></p-inputNumber>
+                <p-inputNumber [min]="0"  mode="decimal" [minFractionDigits]="2" [(ngModel)]="parcelle.RecolteMO" class="p-inputtext-sm" (onBlur)="calculTotal(parcelle)"></p-inputNumber>
               </div>
               <div class="col-md">
-                <p-inputNumber [min]="0" mode="decimal" [(ngModel)]="parcelle.RecolteHorsMO" class="p-inputtext-sm" (onBlur)="calculTotal(parcelle)"></p-inputNumber>
+                <p-inputNumber [min]="0" mode="decimal" [minFractionDigits]="2" [(ngModel)]="parcelle.RecolteHorsMO" class="p-inputtext-sm" (onBlur)="calculTotal(parcelle)"></p-inputNumber>
 
               </div>
               <div class="col-md">
-                <p-inputNumber [min]="0" mode="decimal" [(ngModel)]="parcelle.VentePieds" class="p-inputtext-sm" (onBlur)="calculTotal(parcelle)"></p-inputNumber>
+                <p-inputNumber [min]="0" mode="decimal" [minFractionDigits]="2" [(ngModel)]="parcelle.VentePieds" class="p-inputtext-sm" (onBlur)="calculTotal(parcelle)"></p-inputNumber>
               </div>
               <div class="col-md">
-                <p-inputNumber [min]="0"  [(ngModel)]="parcelle.QteTotale" disabled class="p-inputtext-sm"></p-inputNumber>
+                <p-inputNumber [min]="0" [minFractionDigits]="2" [(ngModel)]="parcelle.QteTotale" disabled class="p-inputtext-sm"></p-inputNumber>
 
               </div>
               <div class="col-md">                    
-                <p-inputNumber [(ngModel)]="parcelle.Solde" mode="decimal" class="p-inputtext-sm"  [min]="0" ></p-inputNumber>
+                <p-inputNumber [(ngModel)]="parcelle.Solde" [minFractionDigits]="2" mode="decimal" class="p-inputtext-sm"  [min]="0" ></p-inputNumber>
               </div>
               <div class="col-md">
                   <button pButton pRipple type="button" icon="pi pi-minus" class="p-button-rounded p-button-warning" (click)="removeItem(parcelle)"></button>

@@ -32,9 +32,9 @@ doc.autoPrint();
 //This is a key for printing
 doc.output('dataurlnewwindow');
   }
-  exportExcel(name) {
+  exportExcel(name,table) {
     import("xlsx").then(xlsx => {
-        const worksheet = xlsx.utils.json_to_sheet(this.table);
+        const worksheet = xlsx.utils.json_to_sheet(table);
         const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
         const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
         this.saveAsExcelFile(excelBuffer, name);

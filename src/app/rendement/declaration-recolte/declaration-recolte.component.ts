@@ -7,6 +7,10 @@ import { MessageService } from "primeng/api";
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import { ExportService } from 'src/app/services/export/export.service';
+import Swal from 'sweetalert2';
+import { DatePipe } from '@angular/common';
+import { elementEventFullName } from '@angular/compiler/src/view_compiler/view_compiler';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
  // Ce Component sert à la gestion de la declaration de la recolte
 
@@ -40,9 +44,9 @@ export class DeclarationRecolteComponent implements OnInit {
   }]
   msgs=[]
   declaration={date_recolte : new Date(),observations:null}
-
+  synthetique = false
   form=false;
-  constructor(private messageService: MessageService,private customerService: CustomerService,private exportService:ExportService,
+  constructor(public datepipe: DatePipe,private customerService: CustomerService,private exportService:ExportService,
     private declarationRecolteService:DeclarationRecolteService,private parcelleCulturaleService:ParcelleCulturaleService) {
   }
 
@@ -55,67 +59,74 @@ export class DeclarationRecolteComponent implements OnInit {
       id_profil:1,
       parcels:this.parcelles
     }
-    console.log(declarationRecolte)
     this.declarationRecolteService.addDeclarationRecolte(declarationRecolte).subscribe(res=>{
-      console.log(res)
+      if(res[0].message=="ajout reussi"){
+        Swal.fire(
+          'Ajout réussi',
+          'La déclaration de la récolte est ajoutée avec succès',
+          'success'
+        )
+        this.showForm()
+        this.ngOnInit()
+      }
     })
-
   }
-declarations:any
+  detailsDeclarations:any
+  declarations:any
   ngOnInit() {
     this.declarationRecolteService.getDeclarationRecolte().subscribe(res=>{
+      console.log(res)
       this.declarations=res
+      this.loading = false;
     })
-    
+  this.declarationRecolteService.getDetailsDeclarationRecolte().subscribe(res=>{
+      this.detailsDeclarations=res
+      this.detailsDeclarations.forEach(element => {
+        element.designation = element.designation==1?'Stockable':'Non Stockable'
+        element.DateRecolte = new Date(element.DateRecolte)
+      });
+      this.loading = false;
+    })
     //recuperer les parcelles culturales
     this.parcelleCulturaleService.getParcelleCulturale().subscribe(res=>{
       for(var i=0;i<res['length'];i++){
         this.listParcelles[i]={label:res[i].Ref,value:res[i].ID}
       }
     })
-    this.customerService.getCustomersLarge().then(customers => {
-      this.customers = customers;
-      this.loading = false;
-      this.customers.forEach(
-        customer => (customer.date = new Date(customer.date))
-      );
-    });
-    //recuperer les donnees de la table
-    this.representatives = [
-      { name: "Amy Elsner", image: "amyelsner.png" },
-      { name: "Anna Fali", image: "annafali.png" },
-      { name: "Asiya Javayant", image: "asiyajavayant.png" },
-      { name: "Bernardo Dominic", image: "bernardodominic.png" },
-      { name: "Elwin Sharvill", image: "elwinsharvill.png" },
-      { name: "Ioni Bowcher", image: "ionibowcher.png" },
-      { name: "Ivan Magalhaes", image: "ivanmagalhaes.png" },
-      { name: "Onyama Limba", image: "onyamalimba.png" },
-      { name: "Stephen Shaw", image: "stephenshaw.png" },
-      { name: "XuXue Feng", image: "xuxuefeng.png" }
-    ];
-
-    this.statuses = [
-      { label: "Unqualified", value: "unqualified" },
-      { label: "Qualified", value: "qualified" },
-      { label: "New", value: "new" },
-      { label: "Negotiation", value: "negotiation" },
-      { label: "Renewal", value: "renewal" },
-      { label: "Proposal", value: "proposal" }
-    ];
-    //this.exportExcel()
-    //this.exportPdf()
   }
   edit(id){
     console.log(id)
   }
   delete(id){
-    console.log(id)
+    Swal.fire({
+      title: 'Valider la suppression',
+      text: "Vous êtes sûrs que vous voulez supprimer cette déclaration de la récolte ?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      cancelButtonText:'Annuler',
+      confirmButtonText: 'Oui'
+    }).then((result) => {
+      if (result.value) {
+        this.declarationRecolteService.deleteDeclarationRecolte(id).subscribe(res=>{
+          if(res[0].message=="ajout reussi"){
+            Swal.fire(
+              'Supprimée !',
+              'La déclaration de la récolte est supprimée avec succès',
+              'success'
+            )
+            this.ngOnInit()
+          }
+        })
+      }
+    })
   }
   //lors du changement de la parcelle il recupère et affiche le type du produit
   onChange(e){
     this.parcelleCulturaleService.getTypeProduit(e.value).subscribe(res=>{
       if(res[0]){
-        this.parcelles[this.parcelles.length-1].type=res[0].designation
+        this.parcelles[this.parcelles.length-1].type=res[0].designation?'Stockable':'Non stockable'
       }else{
         this.parcelles[this.parcelles.length-1].type="Cette parcelle n\' a aucun type de produit"
       }
@@ -125,8 +136,8 @@ declarations:any
   exportPdf() {
     let columns=[
       { header: 'Date de récolte', dataKey: 'DateRecolte'},
-      { header: 'Parcelle', dataKey: 'Ref' },
-      { header: 'Type du produit', dataKey: 'designation' },
+      { header: 'Nombre de parcelles', dataKey: 'parcelles' },
+      { header: 'Observations', dataKey: 'Observations' },
       { header: 'Récolte MO', dataKey: 'RecolteMO' },
       { header: 'Récolte hors MO', dataKey: 'RecolteHorsMO' },
       { header: 'Vente sur pieds', dataKey: 'VentePieds' },
@@ -138,8 +149,8 @@ declarations:any
   printPdf(){
     let columns=[
       { header: 'Date de récolte', dataKey: 'DateRecolte'},
-      { header: 'Parcelle', dataKey: 'Ref' },
-      { header: 'Type du produit', dataKey: 'designation' },
+      { header: 'Nombre de parcelles', dataKey: 'parcelles' },
+      { header: 'Observations', dataKey: 'Observations' },
       { header: 'Récolte MO', dataKey: 'RecolteMO' },
       { header: 'Récolte hors MO', dataKey: 'RecolteHorsMO' },
       { header: 'Vente sur pieds', dataKey: 'VentePieds' },
@@ -149,20 +160,76 @@ declarations:any
     this.exportService.printPdf(columns)
   }
   exportExcel() {
-    this.exportService.exportExcel('declarationsRecolte')
+    let table = []
+    for(var i=0;i<this.declarations.length;i++){
+      table[i]={
+        'Date de récolte': this.datepipe.transform(this.declarations[i].DateRecolte, 'dd/MM/yyyy'),
+        'Nombre de parcelles':this.declarations[i].parcelles,
+        'Observations':this.declarations[i].Observations,
+        'Récolte MO':this.declarations[i].RecolteMO,
+        'Récolte hors MO': this.declarations[i].RecolteHorsMO,
+        'Vente sur pieds': this.declarations[i].VentePieds,
+        'Quantité totale': this.declarations[i].QteTotale 
+      }
+    }
+    this.exportService.exportExcel('declarationsRecolte',table)
   }
-    // Fin exportations
-
-
+  // Fin exportations
+      // Debut exportations details
+      exportDetailsPdf() {
+        let columns=[
+          { header: 'Date de récolte', dataKey: 'DateRecolte'},
+          { header: 'Parcelle', dataKey: 'Ref' },
+          { header: 'Type du produit', dataKey: 'designation' },
+          { header: 'Récolte MO', dataKey: 'RecolteMO' },
+          { header: 'Récolte hors MO', dataKey: 'RecolteHorsMO' },
+          { header: 'Vente sur pieds', dataKey: 'VentePieds' },
+          { header: 'Quantité totale', dataKey: 'QteTotale' }
+        ]
+        this.exportService.setTable(this.detailsDeclarations)
+        this.exportService.exportPdf(columns,'detailsDeclarationsRecolte.pdf')
+      }
+      printDetailsPdf(){
+        let columns=[
+          { header: 'Date de récolte', dataKey: 'DateRecolte'},
+          { header: 'Parcelle', dataKey: 'Ref' },
+          { header: 'Type du produit', dataKey: 'designation' },
+          { header: 'Récolte MO', dataKey: 'RecolteMO' },
+          { header: 'Récolte hors MO', dataKey: 'RecolteHorsMO' },
+          { header: 'Vente sur pieds', dataKey: 'VentePieds' },
+          { header: 'Quantité totale', dataKey: 'QteTotale' }
+        ]
+        this.exportService.setTable(this.detailsDeclarations)
+        this.exportService.printPdf(columns)
+      }
+      exportDetailsExcel() {
+        let table = []
+        for(var i=0;i<this.detailsDeclarations.length;i++){
+          table[i]={
+            'Date de récolte': this.datepipe.transform(this.detailsDeclarations[i].DateRecolte, 'dd/MM/yyyy'),
+            'Parcelle': this.detailsDeclarations[i].Ref ,
+            'Type du produit':this.detailsDeclarations[i].designation,
+            'Récolte MO':this.detailsDeclarations[i].RecolteMO,
+            'Récolte hors MO': this.detailsDeclarations[i].RecolteHorsMO,
+            'Vente sur pieds': this.detailsDeclarations[i].VentePieds,
+            'Quantité totale': this.detailsDeclarations[i].QteTotale 
+          }
+        }
+        this.exportService.exportExcel('detailsDeclarationsRecolte',table)
+      }
+      showHideSynthetique(){
+        this.synthetique=!this.synthetique
+      }
   calculTotal(parcelle){
     let i = this.parcelles.indexOf(parcelle)
     console.log(this.parcelles[i].RecolteMO)
     this.parcelles[i].QteTotale = this.parcelles[i].RecolteMO + this.parcelles[i].RecolteHorsMO + this.parcelles[i].VentePieds
   }
-//Ajouter un nouveau element à la table si l'element courant est valide
+  //Ajouter un nouveau element à la table si l'element courant est valide
   addItem(){
-    if(this.parcelles[this.parcelles.length-1].RecolteMO||this.parcelles[this.parcelles.length-1].Solde||
-      this.parcelles[this.parcelles.length-1].RecolteHorsMO||this.parcelles[this.parcelles.length-1].Solde){
+    if(this.parcelles[this.parcelles.length-1].RecolteMO&&this.parcelles[this.parcelles.length-1].Solde&&
+      this.parcelles[this.parcelles.length-1].RecolteHorsMO&&this.parcelles[this.parcelles.length-1].Solde &&
+      this.parcelles[this.parcelles.length-1].ID_Parcelle_Culturale){
       this.parcelles.push({
         id:this.parcelles.length+1,
         type:null,
@@ -175,11 +242,15 @@ declarations:any
       })
     }
     else{
-      this.messageService.add({severity:'error', summary:'Veuillez renseigner', detail:'tous les champs obligatoires'});
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur...',
+        text: 'Veuillez renseigner tous les champs obligatoires',
+      }
+      )
     }  
   }
-//supprimer un element de la table si il n'est pas le seul , si il est le seul on le vide
-
+  //supprimer un element de la table si il n'est pas le seul , si il est le seul on le vide
   removeItem(parcelle){
     console.log(this.parcelles.indexOf(parcelle))
     if(this.parcelles.length==1){
@@ -198,7 +269,7 @@ declarations:any
     }
   }
 
-//pour afficher et masquer le formulaire
+  //pour afficher et masquer le formulaire
   showForm(){
     this.form=!this.form
   }

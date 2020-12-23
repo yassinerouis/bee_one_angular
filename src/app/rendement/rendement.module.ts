@@ -1,6 +1,6 @@
 import { CustomerService } from './declaration-recolte/customerservice';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { DeclarationRecolteComponent } from './declaration-recolte/declaration-recolte.component';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -23,6 +23,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 const routes: Routes = [
   { path: 'declaration-recolte', component: DeclarationRecolteComponent }
 ]
@@ -39,7 +40,8 @@ const routes: Routes = [
 		MultiSelectModule,
 		ContextMenuModule,
 		DropdownModule,
-		ButtonModule,
+    ButtonModule,
+    SweetAlert2Module.forRoot(),
     ToastModule,
     FormsModule,
     ReactiveFormsModule,
@@ -52,7 +54,7 @@ const routes: Routes = [
     MessageModule,
     MessagesModule
   ],
-  providers: [CustomerService],
+  providers: [CustomerService,DatePipe],
   exports:[TranslateModule]
 })
 export class RendementModule { }

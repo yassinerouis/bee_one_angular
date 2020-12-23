@@ -10,10 +10,16 @@ export class DeclarationRecolteService {
 
   constructor(private http:HttpClient) {
    }
-   getDeclarationRecolte(){
-     return this.http.get(this.url+'getDeclarationsRecolte')
+   getDetailsDeclarationRecolte(){
+     return this.http.get(this.url+'getDetailsDeclarationsRecolte')
    }
+   getDeclarationRecolte(){
+    return this.http.get(this.url+'getDeclarationsRecolte')
+  }
    addDeclarationRecolte(declaration){
       return this.http.post(this.url+"createDeclarationRecolte",declaration)
    }
+   deleteDeclarationRecolte(id){
+    return this.http.delete(this.url+"deleteDeclarationRecolte/"+id)
+ }
 }
